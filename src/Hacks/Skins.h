@@ -11,9 +11,6 @@ bool Init();
 void Run();
 void FixAnimations(CRecvProxyData *data, CBaseViewModel *viewModel, void *);
 
-bool IsEnabled();
-void Toggle();
-
 }  // namespace hacks::skins
 
 #endif  // HAVOC_SKINS_H_

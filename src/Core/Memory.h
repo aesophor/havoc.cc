@@ -2,15 +2,36 @@
 #ifndef HAVOC_MEMORY_H_
 #define HAVOC_MEMORY_H_
 
+#include <dlfcn.h>
+
 #include <cstdint>
+#include <unordered_map>
 #include <utility>
 
 namespace memory {
 
 template <typename ReturnType, typename... Args>
+ReturnType CallFunc(const char *symbol, Args... args) {
+  using Function = ReturnType (*)(decltype(args)...);
+
+  static std::unordered_map<const char *, void *> dlsymCache {};
+  auto it = dlsymCache.find(symbol);
+  void *addr = nullptr;
+
+  if (it != dlsymCache.end()) [[likely]] {
+    addr = it->second;
+  } else {
+    addr = dlsym(RTLD_DEFAULT, symbol);
+    dlsymCache.insert(std::make_pair(symbol, addr));
+  }
+
+  return reinterpret_cast<Function>(addr)(std::forward<Args>(args)...);
+}
+
+template <typename ReturnType, typename... Args>
 constexpr ReturnType CallVFunc(void *vtable, const uint32_t index, Args... args) {
   using Function = ReturnType (*)(void *, decltype(args)...);
-  return (*static_cast<Function **>(vtable))[index](vtable, std::forward<Args>(args)...);
+  return (*reinterpret_cast<Function **>(vtable))[index](vtable, std::forward<Args>(args)...);
 }
 
 // Read the `index`-th entry from the vtable.

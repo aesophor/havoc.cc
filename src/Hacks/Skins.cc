@@ -1,17 +1,11 @@
 // Copyright (c) 2022 Marco Wang <m.aesophor@gmail.com>. All rights reserved.
 #include "Bhop.h"
 
-#include <atomic>
-
 #include "Core/Hooks.h"
 #include "Core/Interfaces.h"
 #include "SDK/CEntity.h"
 #include "SDK/CSequences.h"
 #include "Util/Rand.h"
-
-namespace {
-std::atomic<bool> isEnabled = true;
-}  // namespace
 
 namespace hacks::skins {
 
@@ -124,14 +118,6 @@ void FixAnimations(CRecvProxyData *data, CBaseViewModel *viewModel, void *) {
       }
     }
   }
-}
-
-bool IsEnabled() {
-  return isEnabled;
-}
-
-void Toggle() {
-  isEnabled = !isEnabled;
 }
 
 }  // namespace hacks::skins

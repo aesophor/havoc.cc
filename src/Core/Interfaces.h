@@ -22,6 +22,7 @@ Interface *Capture(const char *moduleName, const char *interfaceName);
 
 inline std::unique_ptr<Dylib> clientDylib = nullptr;
 inline std::unique_ptr<Dylib> engineDylib = nullptr;
+inline std::unique_ptr<Dylib> sdlDylib = nullptr;
 
 // interface pointers
 inline IBaseClientDLL *client = nullptr;

@@ -3,19 +3,22 @@
 
 #include <mach/mach.h>
 #include <sys/mman.h>
+
 #include <cstring>
+
+#include <imgui/backends/imgui_impl_sdl.h>
 
 #include "Core/Interfaces.h"
 #include "Hacks/Aimbot.h"
 #include "Hacks/Bhop.h"
 #include "Hacks/Glow.h"
 #include "Hacks/Skins.h"
+#include "GUI/GUI.h"
 #include "SDK/CEntity.h"
 #include "SDK/CRecvTable.h"
 #include "SDK/CUserCmd.h"
 #include "SDK/IBaseClientDLL.h"
 #include "SDK/IClientMode.h"
-#include "SDK/IGlowManager.h"
 
 namespace hooks {
 
@@ -80,15 +83,21 @@ void SetViewModelSequence(CRecvProxyData *data, CBaseViewModel *viewModel, void 
 bool GlowEffectSpectator(CBasePlayer *player, CLocalPlayer *localPlayer, GlowRenderStyle &glowStyle,
                          CVector &glowColor, float &alphaStart, float &alpha, float &timeStart,
                          float &timeTarget, bool &animate) {
-  if (!hacks::glow::IsEnabled() || !localPlayer || !player->IsEnemy()) {
-    alpha = 0.f;
-    return false;
-  }
+  return hacks::glow::GlowEffectSpectator(player, localPlayer, glowStyle, glowColor,
+                                          alphaStart, alpha, timeStart, timeTarget, animate);
+}
 
-  glowStyle = GlowRenderStyle::DEFAULT;
-  glowColor = {242.0f / 255.0f, 117.0f / 255.0f, 117.0f / 255.0f};
-  alpha = 1.f;
-  return true;
+void SwapWindow(SDL_Window *window) {
+  gui::SwapWindow(window);
+
+  originalSwapWindow(window);
+  SDL_GL_MakeCurrent(window, gui::originalGlCtx);
+}
+
+int PollEvent(SDL_Event *event) {
+  ImGui_ImplSDL2_ProcessEvent(event);
+
+  return originalPollEvent(event);
 }
 
 }  // namespace hooks

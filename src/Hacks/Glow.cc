@@ -1,14 +1,10 @@
 // Copyright (c) 2022 Marco Wang <m.aesophor@gmail.com>. All rights reserved.
 #include "Glow.h"
 
-#include <atomic>
-
 #include "Core/Hooks.h"
 #include "Core/Interfaces.h"
-
-namespace {
-std::atomic<bool> isEnabled = true;
-}  // namespace
+#include "SDK/CEntity.h"
+#include "SDK/IGlowManager.h"
 
 namespace hacks::glow {
 
@@ -28,12 +24,20 @@ bool Init() {
   return hooks::Hook(addr, reinterpret_cast<uintptr_t>(hooks::GlowEffectSpectator));
 }
 
-bool IsEnabled() {
-  return isEnabled;
-}
 
-void Toggle() {
-  isEnabled = !isEnabled;
+bool GlowEffectSpectator(CBasePlayer *player, CLocalPlayer *localPlayer, GlowRenderStyle &glowStyle,
+                         CVector &glowColor, float &alphaStart, float &alpha, float &timeStart,
+                         float &timeTarget, bool &animate) {
+  if (!isEnabled || !localPlayer || !player->IsEnemy()) {
+    alpha = 0.f;
+    return false;
+  }
+
+  glowStyle = GlowRenderStyle::DEFAULT;
+  glowColor = {242.0f / 255.0f, 117.0f / 255.0f, 117.0f / 255.0f};
+  alpha = 1.f;
+  return true;
 }
 
 }  // namespace hacks::glow
+

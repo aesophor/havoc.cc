@@ -2,12 +2,18 @@
 #ifndef HAVOC_GLOW_H_
 #define HAVOC_GLOW_H_
 
+#include "SDK/CEntity.h"
+#include "SDK/CVector.h"
+#include "SDK/IGlowManager.h"
+
 namespace hacks::glow {
 
-bool Init();
+inline bool isEnabled = false;
 
-bool IsEnabled();
-void Toggle();
+bool Init();
+bool GlowEffectSpectator(CBasePlayer *player, CLocalPlayer *localPlayer, GlowRenderStyle &glowStyle,
+                         CVector &glowColor, float &alphaStart, float &alpha, float &timeStart,
+                         float &timeTarget, bool &animate);
 
 }  // namespace hacks::glow
 
