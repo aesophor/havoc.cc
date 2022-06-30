@@ -1,12 +1,11 @@
 // Copyright (c) 2022 Marco Wang <m.aesophor@gmail.com>. All rights reserved.
 #include "GUI.h"
 
-#include <thread>
-
+#include <imgui/imgui.h>
 #include <imgui/backends/imgui_impl_opengl2.h>
 #include <imgui/backends/imgui_impl_sdl.h>
-#include <imgui/imgui.h>
 
+#include "Core/Hooks.h"
 #include "Core/Interfaces.h"
 #include "Hacks/Aimbot.h"
 #include "Hacks/Bhop.h"
@@ -39,14 +38,10 @@ void Init() {
 
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
-
-  ImGuiIO &io = ImGui::GetIO();
-  io.IniFilename = nullptr;
-
   ImGui::StyleColorsDark();
 }
 
-void SwapWindow(SDL_Window *window) {
+void Render(SDL_Window *window) {
   originalGlCtx = SDL_GL_GetCurrentContext();
 
   if (!havocGlCtx) {
@@ -65,27 +60,35 @@ void SwapWindow(SDL_Window *window) {
   ImGui::NewFrame();
 
   if (ImGui::Begin("Havoc")) {
-    ImGui::Checkbox("##aimbot", &hacks::aimbot::isEnabled);
-    ImGui::SameLine();
-    ImGui::Text("Aimbot");
-    ImGui::Separator();
-
-    ImGui::Checkbox("##bhop", &hacks::bhop::isEnabled);
-    ImGui::SameLine();
-    ImGui::Text("Bunny Hop");
-    ImGui::Separator();
-
-    ImGui::Checkbox("##glow", &hacks::glow::isEnabled);
-    ImGui::SameLine();
-    ImGui::Text("Wallhack");
-
-    ImGui::End();
+    if (ImGui::CollapsingHeader("Aimbot")) {
+      ImGui::Checkbox("Enabled##aimbot", &hacks::aimbot::isEnabled);
+      ImGui::BeginDisabled(!hacks::aimbot::isEnabled);
+      ImGui::Checkbox("Legit##aimbot", &hacks::aimbot::isLegit);
+      ImGui::Checkbox("Automatic fire##aimbot", &hacks::aimbot::shouldAutoFire);
+      ImGui::SliderInt("Fire delay (ms)##aimbot", &hacks::aimbot::fireDelayMs, 0, 1000);
+      ImGui::Checkbox("Automatic scope##aimbot", &hacks::aimbot::shouldAutoScope);
+      ImGui::Checkbox("Automatic penetration##aimbot", &hacks::aimbot::shouldPenetrate);
+      ImGui::Checkbox("Shoot teammates##aimbot", &hacks::aimbot::shouldShootTeammates);
+      ImGui::SliderFloat("Hit chance##aimbot", &hacks::aimbot::hitChance, 0.0f, 1.0f);
+       ImGui::EndDisabled();
+    }
+    if (ImGui::CollapsingHeader("Wallhack")) {
+      ImGui::Checkbox("Enabled##glow", &hacks::glow::isEnabled);
+      ImGui::BeginDisabled(!hacks::glow::isEnabled);
+      ImGui::Checkbox("Show teammates##glow", &hacks::glow::shouldShowTeammates);
+      ImGui::EndDisabled();
+    }
+    if (ImGui::CollapsingHeader("Bunny Hop")) {
+      ImGui::Checkbox("Enabled##bhop", &hacks::bhop::isEnabled);
+      ImGui::BeginDisabled(!hacks::bhop::isEnabled);
+      ImGui::Checkbox("Strafe##bhop", &hacks::bhop::shouldStrafe);
+      ImGui::EndDisabled();
+    }
   }
 
+  ImGui::End();
   ImGui::Render();
   ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
-
-  std::this_thread::sleep_for(std::chrono::milliseconds(10));
 }
 
 }  // namespace gui

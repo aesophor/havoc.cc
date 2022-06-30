@@ -8,23 +8,10 @@
 namespace gui {
 
 void Init();
-void SwapWindow(SDL_Window *window);
+void Render(SDL_Window *window);
 
 inline SDL_GLContext originalGlCtx = nullptr;
 
 }  // namespace gui
-
-namespace hooks {
-
-void SwapWindow(SDL_Window *window);
-int PollEvent(SDL_Event *event);
-
-using SwapWindowFn = void (*)(SDL_Window *window);
-inline SwapWindowFn originalSwapWindow = nullptr;
-
-using PollEventFn = int (*)(SDL_Event *event);
-inline PollEventFn originalPollEvent = nullptr;
-
-}  // namespace hooks
 
 #endif  // HAVOC_GUI_H_

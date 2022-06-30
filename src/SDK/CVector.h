@@ -39,11 +39,11 @@ struct CVector {
   constexpr bool operator!=(const CVector &other) const {
     return !(*this == other);
   }
-  
-  constexpr bool operator!() const {
-    return *this == CVector{};
-  }
 
+  constexpr operator bool() const {
+    return *this != CVector{};
+  }
+  
   constexpr CVector Scale(float factor) const {
     return {x * factor, y * factor, z * factor};
   }

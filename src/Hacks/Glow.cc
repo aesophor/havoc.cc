@@ -28,7 +28,11 @@ bool Init() {
 bool GlowEffectSpectator(CBasePlayer *player, CLocalPlayer *localPlayer, GlowRenderStyle &glowStyle,
                          CVector &glowColor, float &alphaStart, float &alpha, float &timeStart,
                          float &timeTarget, bool &animate) {
-  if (!isEnabled || !localPlayer || !player->IsEnemy()) {
+  if (!localPlayer) {
+    return false;
+  }
+
+  if (!isEnabled || (!shouldShowTeammates && !player->IsEnemy())) {
     alpha = 0.f;
     return false;
   }

@@ -9,6 +9,7 @@
 namespace hacks::glow {
 
 inline bool isEnabled = false;
+inline bool shouldShowTeammates = false;
 
 bool Init();
 bool GlowEffectSpectator(CBasePlayer *player, CLocalPlayer *localPlayer, GlowRenderStyle &glowStyle,

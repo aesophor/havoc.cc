@@ -209,7 +209,7 @@ class CBasePlayer : public CEntity {
   }
 
   bool IsEnemy();
-  bool IsVisible();
+  bool IsVisible(bool shouldPenetrate);
   float GetDistanceFrom(CBasePlayer *player);
 };
 

@@ -15,6 +15,9 @@ class CBaseViewModel;
 enum class GlowRenderStyle;
 enum class ClientFrameStage;
 
+class SDL_Window;
+union SDL_Event;
+
 namespace hooks {
 
 // Hook/Replace the instruction at `func_addr` to `jmp user_func_addr`.
@@ -26,6 +29,8 @@ void SetViewModelSequence(CRecvProxyData *data, CBaseViewModel *viewModel, void 
 bool GlowEffectSpectator(CBasePlayer *player, CLocalPlayer *localPlayer, GlowRenderStyle &glowStyle,
                          CVector &glowColor, float &alphaStart, float &alpha, float &timeStart,
                          float &timeTarget, bool &animate);
+void SwapWindow(SDL_Window *window);
+int PollEvent(SDL_Event *event);
 
 using CreateMoveFn = bool (*)(IClientMode *, float, CUserCmd *);
 inline CreateMoveFn originalCreateMove = nullptr;
@@ -35,6 +40,13 @@ inline FrameStageNotifyFn originalFrameStageNotify = nullptr;
 
 using SetViewModelSequenceFn = void (*)(CRecvProxyData *data, CBaseViewModel *, void *);
 inline SetViewModelSequenceFn originalSetViewModelSequence = nullptr;
+
+using SwapWindowFn = void (*)(SDL_Window *window);
+inline SwapWindowFn originalSwapWindow = nullptr;
+
+using PollEventFn = int (*)(SDL_Event *event);
+inline PollEventFn originalPollEvent = nullptr;
+
 
 }  // namespace hooks
 

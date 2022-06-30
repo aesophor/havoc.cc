@@ -6,6 +6,8 @@
 
 #include <cstring>
 
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_video.h>
 #include <imgui/backends/imgui_impl_sdl.h>
 
 #include "Core/Interfaces.h"
@@ -88,7 +90,7 @@ bool GlowEffectSpectator(CBasePlayer *player, CLocalPlayer *localPlayer, GlowRen
 }
 
 void SwapWindow(SDL_Window *window) {
-  gui::SwapWindow(window);
+  gui::Render(window);
 
   originalSwapWindow(window);
   SDL_GL_MakeCurrent(window, gui::originalGlCtx);

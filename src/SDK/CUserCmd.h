@@ -48,8 +48,8 @@ class CUserCmd {
   int32_t weaponSelect;
   int32_t weaponSubType;
   int32_t randomSeed;
-  short mouseDeltaX;
-  short mouseDeltaY;
+  short mouseDx;
+  short mouseDy;
   bool hasBeenPredicted;
   CVector headAngles;
   CVector headOffset;

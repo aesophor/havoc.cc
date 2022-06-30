@@ -7,6 +7,13 @@
 namespace hacks::aimbot {
 
 inline bool isEnabled = false;
+inline bool isLegit = true;
+inline bool shouldAutoFire = false;
+inline bool shouldAutoScope = false;
+inline bool shouldPenetrate = false;
+inline bool shouldShootTeammates = false;
+inline float hitChance = 0.35f;
+inline int fireDelayMs = 50;
 
 bool Init();
 void Run(CUserCmd *cmd);
