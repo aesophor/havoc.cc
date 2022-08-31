@@ -4,9 +4,6 @@
 #include <mach-o/dyld.h>
 #include <sys/stat.h>
 
-#include <cassert>
-#include <string_view>
-
 Dylib::Dylib(const std::string &name) : name(name), handle(), base(), size() {
   for (uint32_t i = 0; i < _dyld_image_count(); i++) {
     std::string image_name = _dyld_get_image_name(i);
