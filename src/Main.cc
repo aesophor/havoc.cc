@@ -4,6 +4,7 @@
 #include "GUI/GUI.h"
 #include "Hacks/Aimbot.h"
 #include "Hacks/Bhop.h"
+#include "Hacks/Chams.h"
 #include "Hacks/Glow.h"
 #include "Hacks/Skins.h"
 
@@ -14,6 +15,7 @@ void __attribute__((constructor)) OnDylibLoad() {
 
   hacks::aimbot::Init();
   hacks::bhop::Init();
+  hacks::chams::Init();
   hacks::glow::Init();
   hacks::skins::Init();
 }

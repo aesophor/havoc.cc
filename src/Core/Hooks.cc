@@ -13,6 +13,7 @@
 #include "Core/Interfaces.h"
 #include "Hacks/Aimbot.h"
 #include "Hacks/Bhop.h"
+#include "Hacks/Chams.h"
 #include "Hacks/Glow.h"
 #include "Hacks/Skins.h"
 #include "GUI/GUI.h"
@@ -87,6 +88,13 @@ bool GlowEffectSpectator(CBasePlayer *player, CLocalPlayer *localPlayer, GlowRen
                          float &timeTarget, bool &animate) {
   return hacks::glow::GlowEffectSpectator(player, localPlayer, glowStyle, glowColor,
                                           alphaStart, alpha, timeStart, timeTarget, animate);
+}
+
+void DrawModel(IStudioRender *thisptr, void *results, const CDrawModelInfo &info,
+               CMatrix3x4 *bones, float *flexWeights, float *flexDelayedWeights,
+               const CVector &modelOrigin, const int flags) {
+  return hacks::chams::DrawModel(thisptr, results, info, bones,
+                                 flexWeights, flexDelayedWeights, modelOrigin, flags);
 }
 
 void SwapWindow(SDL_Window *window) {

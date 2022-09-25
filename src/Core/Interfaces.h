@@ -8,17 +8,21 @@
 #include "SDK/IBaseClientDLL.h"
 #include "SDK/IClientEntityList.h"
 #include "SDK/IClientMode.h"
-#include "SDK/IEngineTrace.h"
 #include "SDK/IEngineClient.h"
+#include "SDK/IEngineTrace.h"
+#include "SDK/IMaterialSystem.h"
 #include "SDK/IModelInfo.h"
+#include "SDK/IStudioRender.h"
 
 namespace interfaces {
 
 void Init();
 
-inline std::unique_ptr<Dylib> clientDylib = nullptr;
-inline std::unique_ptr<Dylib> engineDylib = nullptr;
-inline std::unique_ptr<Dylib> sdlDylib = nullptr;
+inline std::unique_ptr<Dylib> clientDylib;
+inline std::unique_ptr<Dylib> engineDylib;
+inline std::unique_ptr<Dylib> materialSystemDylib;
+inline std::unique_ptr<Dylib> studioRenderDylib;
+inline std::unique_ptr<Dylib> sdlDylib;
 
 // interface pointers
 inline IBaseClientDLL *client = nullptr;
@@ -26,7 +30,9 @@ inline IClientEntityList *entityList = nullptr;
 inline IClientMode *clientMode = nullptr;
 inline IEngineClient *engine = nullptr;
 inline IEngineTrace *engineTrace = nullptr;
+inline IMaterialSystem *materialSystem = nullptr;
 inline IModelInfo *modelInfo = nullptr;
+inline IStudioRender *studioRender = nullptr;
 
 }  // namespace interfaces
 

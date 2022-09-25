@@ -20,6 +20,8 @@ uintptr_t GetClientMode() {
 void Init() {
   clientDylib = std::make_unique<Dylib>("client.dylib");
   engineDylib = std::make_unique<Dylib>("engine.dylib");
+  materialSystemDylib = std::make_unique<Dylib>("materialsystem.dylib");
+  studioRenderDylib = std::make_unique<Dylib>("studiorender.dylib");
   sdlDylib = std::make_unique<Dylib>("libSDL2-2.0.0.dylib");
 
   client = clientDylib->GetInterface<IBaseClientDLL>("VClient");
@@ -27,7 +29,9 @@ void Init() {
   entityList = clientDylib->GetInterface<IClientEntityList>("VClientEntityList");
   engine = engineDylib->GetInterface<IEngineClient>("VEngineClient");
   engineTrace = engineDylib->GetInterface<IEngineTrace>("EngineTraceClient");
+  materialSystem = materialSystemDylib->GetInterface<IMaterialSystem>("VMaterialSystem");
   modelInfo = engineDylib->GetInterface<IModelInfo>("VModelInfoClient");
+  studioRender = studioRenderDylib->GetInterface<IStudioRender>("VStudioRender");
 }
 
 }  // namespace interfaces

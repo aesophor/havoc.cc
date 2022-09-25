@@ -5,9 +5,20 @@
 #include "Core/Memory.h"
 
 // https://gitlab.com/KittenPopo/csgo-2018-source/-/blob/main/public/istudiorender.h#L201
+//
+// CDrawModelInfo = {
+//   studioHdr: 0x7fe79fcd0020,
+//   hardwareData: 0x7fe74d20a25c,
+//   decals: 0,
+//   skin: 0,
+//   body: 0,
+//   hitboxSet: 0,
+//   __unknown0: 0,
+//   renderable: 0x7fe717d32818,
+//   __unknown1: 0xc51cc30000000000
+// }
 class CStudioHdr;
 class IClientRenderable;
-
 class CDrawModelInfo {
  public:
   CStudioHdr *studioHdr;
@@ -16,6 +27,7 @@ class CDrawModelInfo {
   int32_t skin;
   int32_t body;
   int32_t hitboxSet;
+  int32_t __unknown;
   IClientRenderable *renderable;
 };
 

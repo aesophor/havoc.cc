@@ -5,13 +5,16 @@
 #include <cstdint>
 
 class CBasePlayer;
+class CBaseViewModel;
+class CDrawModelInfo;
 class CLocalPlayer;
+class CMatrix3x4;
+class CRecvProxyData;
+class CUserCmd;
 class CVector;
 class IClientMode;
 class IBaseClientDLL;
-class CUserCmd;
-class CRecvProxyData;
-class CBaseViewModel;
+class IStudioRender;
 enum class GlowRenderStyle;
 enum class ClientFrameStage;
 
@@ -29,6 +32,9 @@ void SetViewModelSequence(CRecvProxyData *data, CBaseViewModel *viewModel, void 
 bool GlowEffectSpectator(CBasePlayer *player, CLocalPlayer *localPlayer, GlowRenderStyle &glowStyle,
                          CVector &glowColor, float &alphaStart, float &alpha, float &timeStart,
                          float &timeTarget, bool &animate);
+void DrawModel(IStudioRender *thisptr, void *results, const CDrawModelInfo &info,
+               CMatrix3x4 *bones, float *flexWeights, float *flexDelayedWeights,
+               const CVector &modelOrigin, const int flags);
 void SwapWindow(SDL_Window *window);
 int PollEvent(SDL_Event *event);
 
@@ -41,12 +47,15 @@ inline FrameStageNotifyFn originalFrameStageNotify = nullptr;
 using SetViewModelSequenceFn = void (*)(CRecvProxyData *data, CBaseViewModel *, void *);
 inline SetViewModelSequenceFn originalSetViewModelSequence = nullptr;
 
+using DrawModelFn = void (*)(IStudioRender *, void *, const CDrawModelInfo &,
+                             CMatrix3x4 *, float *, float *, const CVector &, const int);
+inline DrawModelFn originalDrawModel = nullptr;
+
 using SwapWindowFn = void (*)(SDL_Window *window);
 inline SwapWindowFn originalSwapWindow = nullptr;
 
 using PollEventFn = int (*)(SDL_Event *event);
 inline PollEventFn originalPollEvent = nullptr;
-
 
 }  // namespace hooks
 

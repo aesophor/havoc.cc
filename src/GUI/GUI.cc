@@ -9,6 +9,7 @@
 #include "Core/Interfaces.h"
 #include "Hacks/Aimbot.h"
 #include "Hacks/Bhop.h"
+#include "Hacks/Chams.h"
 #include "Hacks/Glow.h"
 #include "Hacks/Skins.h"
 
@@ -72,7 +73,10 @@ void Render(SDL_Window *window) {
       ImGui::SliderFloat("Hit chance##aimbot", &hacks::aimbot::hitChance, 0.0f, 1.0f);
        ImGui::EndDisabled();
     }
-    if (ImGui::CollapsingHeader("Wallhack")) {
+    if (ImGui::CollapsingHeader("Chams")) {
+      ImGui::Checkbox("Enabled##chams", &hacks::chams::isEnabled);
+    }
+    if (ImGui::CollapsingHeader("Glow")) {
       ImGui::Checkbox("Enabled##glow", &hacks::glow::isEnabled);
       ImGui::BeginDisabled(!hacks::glow::isEnabled);
       ImGui::Checkbox("Show teammates##glow", &hacks::glow::shouldShowTeammates);
