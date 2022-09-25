@@ -64,6 +64,9 @@ class IClientUnknown : public IHandleEntity {
   virtual IClientNetworkable *GetClientNetworkable() = 0;
   virtual IClientRenderable *GetClientRenderable() = 0;
   virtual IClientEntity *GetClientEntity() = 0;
+
+  // XXX: It seems that on macOS, the virtual function at index 4
+  // doesn't return a pointer to CEntity. Reverse this and find out why.
   virtual CEntity *GetEntity() = 0;
 };
 
