@@ -47,7 +47,8 @@ void Run() {
   }
 
   for (const auto handle : localPlayer->GetWeaponHandles()) {
-    auto weapon = interfaces::entityList->GetEntityFromHandle<CBaseAttributableItem>(handle);
+    auto weapon
+      = interfaces::entityList->GetEntityFromHandle<CBaseAttributableItem>(handle);
 
     if (!weapon) {
       continue;
@@ -67,15 +68,17 @@ void Run() {
     }
   }
 
-  auto viewModel = interfaces::entityList->GetEntityFromHandle<CBaseViewModel>(
-      localPlayer->GetViewModelHandle());
+  auto viewModel
+    = interfaces::entityList->GetEntityFromHandle<CBaseViewModel>(
+        localPlayer->GetViewModelHandle());
 
   if (!viewModel) {
     return;
   }
 
-  auto activeWeapon = interfaces::entityList->GetEntityFromHandle<CBaseCombatWeapon>(
-      viewModel->GetWeaponHandle());
+  auto activeWeapon
+    = interfaces::entityList->GetEntityFromHandle<CBaseCombatWeapon>(
+        viewModel->GetWeaponHandle());
 
   if (!activeWeapon) {
     return;
@@ -93,7 +96,9 @@ void Run() {
 }
 
 void FixAnimations(CRecvProxyData *data, CBaseViewModel *viewModel, void *) {
-  CEntity *owner = interfaces::entityList->GetEntityFromHandle(viewModel->GetOwnerHandle());
+  auto owner
+    = interfaces::entityList->GetEntityFromHandle(
+        viewModel->GetOwnerHandle());
 
   // Compare the owner entity of this view model to the local player entity.
   if (owner && owner->GetIndex() == interfaces::engine->GetLocalPlayerIndex()) {
