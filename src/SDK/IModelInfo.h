@@ -1,6 +1,6 @@
 // Copyright (c) 2022 Marco Wang <m.aesophor@gmail.com>. All rights reserved.
-#ifndef HAVOC_I_VMODEL_INFO_H_
-#define HAVOC_I_VMODEL_INFO_H_
+#ifndef HAVOC_I_MODEL_INFO_H_
+#define HAVOC_I_MODEL_INFO_H_
 
 #include "Core/Memory.h"
 #include "SDK/CVector.h"
@@ -111,7 +111,7 @@ class CModel {
   float radius;
 };
 
-class IVModelInfo {
+class IModelInfo {
  public:
   enum ERenderFlags : uint32_t {
     RENDER_FLAGS_DISABLE_RENDERING = 0x01,
@@ -142,4 +142,4 @@ class IVModelInfo {
   }
 };
 
-#endif  // HAVOC_I_VMODEL_INFO_H_
+#endif  // HAVOC_I_MODEL_INFO_H_

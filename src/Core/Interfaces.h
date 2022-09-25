@@ -9,8 +9,8 @@
 #include "SDK/IClientEntityList.h"
 #include "SDK/IClientMode.h"
 #include "SDK/IEngineTrace.h"
-#include "SDK/IVEngineClient.h"
-#include "SDK/IVModelInfo.h"
+#include "SDK/IEngineClient.h"
+#include "SDK/IModelInfo.h"
 
 namespace interfaces {
 
@@ -23,10 +23,10 @@ inline std::unique_ptr<Dylib> sdlDylib = nullptr;
 // interface pointers
 inline IBaseClientDLL *client = nullptr;
 inline IClientEntityList *entityList = nullptr;
-inline IVEngineClient *engine = nullptr;
-inline IEngineTrace *engineTrace = nullptr;
-inline IVModelInfo *modelInfo = nullptr;
 inline IClientMode *clientMode = nullptr;
+inline IEngineClient *engine = nullptr;
+inline IEngineTrace *engineTrace = nullptr;
+inline IModelInfo *modelInfo = nullptr;
 
 }  // namespace interfaces
 

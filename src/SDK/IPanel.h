@@ -4,7 +4,7 @@
 
 #include "Core/Memory.h"
 
-class IVPanel {
+class IPanel {
  public:
   constexpr const char *GetName(uint32_t panel) {
     return memory::CallVFunc<const char *>(this, 36, panel);

@@ -23,11 +23,11 @@ void Init() {
   sdlDylib = std::make_unique<Dylib>("libSDL2-2.0.0.dylib");
 
   client = clientDylib->GetInterface<IBaseClientDLL>("VClient");
-  entityList = clientDylib->GetInterface<IClientEntityList>("VClientEntityList");
-  engine = engineDylib->GetInterface<IVEngineClient>("VEngineClient");
-  engineTrace = engineDylib->GetInterface<IEngineTrace>("EngineTraceClient");
-  modelInfo = engineDylib->GetInterface<IVModelInfo>("VModelInfoClient");
   clientMode = reinterpret_cast<IClientMode *>(GetClientMode());
+  entityList = clientDylib->GetInterface<IClientEntityList>("VClientEntityList");
+  engine = engineDylib->GetInterface<IEngineClient>("VEngineClient");
+  engineTrace = engineDylib->GetInterface<IEngineTrace>("EngineTraceClient");
+  modelInfo = engineDylib->GetInterface<IModelInfo>("VModelInfoClient");
 }
 
 }  // namespace interfaces

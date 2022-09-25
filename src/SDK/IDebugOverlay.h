@@ -6,7 +6,7 @@
 #include "SDK/CMatrix.h"
 #include "SDK/CVector.h"
 
-class IVDebugOverlay {
+class IDebugOverlay {
  public:
   virtual void AddEntityTextOverlay(int entityIndex, int lineOffset, float duration, int r,
                                     int g, int b, int a, const char *fmt, ...) = 0;

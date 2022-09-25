@@ -1,13 +1,13 @@
 // Copyright (c) 2022 Marco Wang <m.aesophor@gmail.com>. All rights reserved.
-#ifndef HAVOC_I_VENGINE_CLIENT_H_
-#define HAVOC_I_VENGINE_CLIENT_H_
+#ifndef HAVOC_I_ENGINE_CLIENT_H_
+#define HAVOC_I_ENGINE_CLIENT_H_
 
 #include "Core/Memory.h"
 #include "SDK/CMatrix.h"
 #include "SDK/CVector.h"
 #include "SDK/ISpatialQuery.h"
 
-class IVEngineClient {
+class IEngineClient {
  public:
   constexpr void GetScreenSize(std::int32_t &width, std::int32_t &height) {
     memory::CallVFunc<void>(this, 5, std::ref(width), std::ref(height));
@@ -42,4 +42,4 @@ class IVEngineClient {
   }
 };
 
-#endif  // HAVOC_I_VENGINE_CLIENT_H_
+#endif  // HAVOC_I_ENGINE_CLIENT_H_
