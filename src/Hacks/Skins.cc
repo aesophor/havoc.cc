@@ -11,8 +11,10 @@ namespace hacks::skins {
 
 bool Init() {
   // VTable hijacking (IBaseClientDLL::FrameStageNotify()).
-  hooks::originalFrameStageNotify = memory::GetVFunc<hooks::FrameStageNotifyFn>(interfaces::client, 37);
-  memory::PutVFunc(interfaces::client, 37, &hooks::FrameStageNotify);
+  constexpr int kFrameStageNotifyVTableIdx = 37;
+  hooks::originalFrameStageNotify
+    = memory::GetVFunc<hooks::FrameStageNotifyFn>(interfaces::client, kFrameStageNotifyVTableIdx);
+  memory::PutVFunc(interfaces::client, kFrameStageNotifyVTableIdx, &hooks::FrameStageNotify);
 
   // Hook m_nSequence proxy function.
   for (CClientClass *cClass = interfaces::client->GetAllClasses(); cClass;

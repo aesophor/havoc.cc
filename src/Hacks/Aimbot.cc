@@ -15,8 +15,11 @@ namespace hacks::aimbot {
 
 bool Init() {
   // VTable hijacking (ClientModeShared::CreateMove()).
-  hooks::originalCreateMove = memory::GetVFunc<hooks::CreateMoveFn>(interfaces::clientMode, 25);
-  memory::PutVFunc(interfaces::clientMode, 25, &hooks::CreateMove);
+  constexpr int kCreateMoveVTableIdx = 25;
+  hooks::originalCreateMove
+    = memory::GetVFunc<hooks::CreateMoveFn>(interfaces::clientMode, kCreateMoveVTableIdx);
+  memory::PutVFunc(interfaces::clientMode, kCreateMoveVTableIdx, &hooks::CreateMove);
+
   return true;
 }
 

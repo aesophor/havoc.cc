@@ -7,10 +7,11 @@ namespace interfaces {
 
 uintptr_t GetClientMode() {
   // Find IClientMode using signature scanning.
-  static const uint8_t sig[] = {0x48, 0x8b, 0xb7, 0x00, 0x00, 0x00, 0x00, 0x48,
-                                0x8d, 0x3d, 0x00, 0x00, 0x00, 0x00, 0x5d, 0xe9};
+  constexpr uint8_t kSig[] = {0x48, 0x8b, 0xb7, 0x00, 0x00, 0x00, 0x00, 0x48,
+                              0x8d, 0x3d, 0x00, 0x00, 0x00, 0x00, 0x5d, 0xe9};
+  constexpr char kMask[] = "xxx????xxx????xx";
 
-  uintptr_t sigAddr = clientDylib->ScanSignature(sig, "xxx????xxx????xx") + 0xa;
+  uintptr_t sigAddr = clientDylib->ScanSignature(kSig, kMask) + 0xa;
   uintptr_t fileOffset = sigAddr - clientDylib->GetBase();
   uintptr_t offset = *reinterpret_cast<uint32_t *>(sigAddr);
   return clientDylib->GetBase() + (offset + fileOffset) + 0x4;
