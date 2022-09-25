@@ -25,12 +25,12 @@
 namespace hooks {
 
 bool Hook(uintptr_t func_addr, uintptr_t user_func_addr) {
-  constexpr mach_msg_type_number_t size_of_jmp = (sizeof(uintptr_t) * 2);
+  constexpr mach_msg_type_number_t kSizeOfJmp = (sizeof(uintptr_t) * 2);
 
   void *func = reinterpret_cast<void *>(func_addr);
   void *page = reinterpret_cast<void *>(func_addr & ~vm_page_mask);
 
-  uint8_t opcodes[size_of_jmp] = {0xff, 0x25};
+  uint8_t opcodes[kSizeOfJmp] = {0xff, 0x25};
   *((int *) &opcodes[2]) = 0;
   *((uintptr_t *) &opcodes[6]) = user_func_addr;
 
@@ -40,7 +40,7 @@ bool Hook(uintptr_t func_addr, uintptr_t user_func_addr) {
   }
 
   // Rewrite the first instruction to `jmp user_func_addr`.
-  memcpy(func, opcodes, size_of_jmp);
+  memcpy(func, opcodes, kSizeOfJmp);
 
   // Unset write permission.
   return mprotect(page, vm_page_size, PROT_READ | PROT_EXEC) == 0;

@@ -198,11 +198,11 @@ class CBasePlayer : public CEntity {
   }
 
   CVector GetBonePosition(int boneIndex) {
-    constexpr size_t MAX_STUDIO_BONES = 128;
-    constexpr size_t BONE_USED_BY_HITBOX = 256;
-    CMatrix3x4 bones[MAX_STUDIO_BONES];
+    constexpr size_t kMaxStudioBones = 128;
+    constexpr size_t kBoneUsedByHitbox = 256;
+    CMatrix3x4 bones[kMaxStudioBones];
 
-    if (!SetupBones(bones, MAX_STUDIO_BONES, BONE_USED_BY_HITBOX, 0)) {
+    if (!SetupBones(bones, kMaxStudioBones, kBoneUsedByHitbox, 0)) {
       return GetVecOrigin();
     }
     return bones[boneIndex].Origin();

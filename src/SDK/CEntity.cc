@@ -36,8 +36,8 @@ bool CBasePlayer::IsVisible(bool shouldPenetrate) {
       trace
   );
 
-  constexpr auto validTraceDist = 0.97f;
-  return trace.entity && trace.fraction >= validTraceDist;
+  constexpr auto kValidTraceDist = 0.97f;
+  return trace.entity && trace.fraction >= kValidTraceDist;
 }
 
 float CBasePlayer::GetDistanceFrom(CBasePlayer *other) {
