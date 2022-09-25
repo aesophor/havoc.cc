@@ -30,9 +30,9 @@ bool CBasePlayer::IsVisible(bool shouldPenetrate) {
 
   CTrace trace;
   interfaces::engineTrace->TraceRay(
-      CRay{ localPlayer->GetEyePosition(), enemyHeadPosition },
+      CRay{localPlayer->GetEyePosition(), enemyHeadPosition},
       mask,
-      CTraceFilter { localPlayer },
+      CTraceFilter{localPlayer},
       trace
   );
 
