@@ -27,38 +27,33 @@ class ICollideable {
   virtual const CVector &OBBMaxs() const;
 };
 
-class IHandleEntity {
- public:
-  virtual ~IHandleEntity() = default;
-};
+class IHandleEntity {};
 
+class IClientUnknown;
 class IClientRenderable {
  public:
-  virtual ~IClientRenderable() = default;
+  IClientUnknown* GetIClientUnknown() {
+    return memory::CallVFunc<IClientUnknown *>(this + 0x8, 0);
+  }
 
   Model *GetModel() {
-    return memory::CallVFunc<Model *>(this, 8);
+    return memory::CallVFunc<Model *>(this + 0x8, 8);
   }
 
   bool SetupBones(CMatrix3x4 *boneMatrix, int nMaxBones, int nBoneMask,
                   float currentTime = 0) {
-    return memory::CallVFunc<bool>(this, 13, boneMatrix, nMaxBones, nBoneMask, currentTime);
+    return memory::CallVFunc<bool>(this + 0x8, 13, boneMatrix, nMaxBones, nBoneMask, currentTime);
   }
 };
 
 class IClientNetworkable {
  public:
-  virtual ~IClientNetworkable() = default;
-
   CClientClass *GetClientClass() {
-    return memory::CallVFunc<CClientClass *>(this, 2);
+    return memory::CallVFunc<CClientClass *>(this + 0x10, 2);
   }
 };
 
-class IClientThinkable {
- public:
-  virtual ~IClientThinkable() = default;
-};
+class IClientThinkable {};
 
 class IClientEntity;
 class CEntity;
@@ -77,8 +72,6 @@ class IClientEntity : public IClientUnknown,
                       public IClientNetworkable,
                       public IClientThinkable {
  public:
-  virtual ~IClientEntity() = default;
-
   int &GetIndex() {
     return *reinterpret_cast<int *>((uintptr_t(this) + 0x94));
   }
