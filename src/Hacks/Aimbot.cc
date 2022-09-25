@@ -6,6 +6,7 @@
 #include "Core/Hooks.h"
 #include "Core/Interfaces.h"
 #include "SDK/CEntity.h"
+#include "SDK/HitGroups.h"
 
 namespace {
 uint64_t lastFiredTimestamp = 0;  // in milliseconds
@@ -63,7 +64,7 @@ void Run(CUserCmd *cmd) {
     }
 
     CVector localEyePosition = localPlayer->GetEyePosition();
-    CVector enemyHeadPosition = player->GetBonePosition(8);
+    CVector enemyHeadPosition = player->GetBonePosition(Bone::HEAD);
     CVector aimPunch = localPlayer->GetAimPunchAngle();
 
     CVector enemyAngle =

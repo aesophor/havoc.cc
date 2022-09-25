@@ -11,6 +11,7 @@
 #include "SDK/CItemDefs.h"
 #include "SDK/CMatrix.h"
 #include "SDK/CVector.h"
+#include "SDK/HitGroups.h"
 #include "Util/TypeTraits.h"
 
 using CBaseHandle = int;
@@ -197,7 +198,7 @@ class CBasePlayer : public CEntity {
     return GetVecOrigin() + GetVecViewOffset();
   }
 
-  CVector GetBonePosition(int boneIndex) {
+  CVector GetBonePosition(const Bone bone) {
     constexpr size_t kMaxStudioBones = 128;
     constexpr size_t kBoneUsedByHitbox = 256;
     CMatrix3x4 bones[kMaxStudioBones];
@@ -205,7 +206,7 @@ class CBasePlayer : public CEntity {
     if (!SetupBones(bones, kMaxStudioBones, kBoneUsedByHitbox, 0)) {
       return GetVecOrigin();
     }
-    return bones[boneIndex].Origin();
+    return bones[static_cast<int>(bone)].Origin();
   }
 
   bool IsEnemy();

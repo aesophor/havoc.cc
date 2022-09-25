@@ -17,7 +17,7 @@ bool CBasePlayer::IsVisible(bool shouldPenetrate) {
     return false;
   }
 
-  CVector enemyHeadPosition = GetBonePosition(8);
+  CVector enemyHeadPosition = GetBonePosition(Bone::HEAD);
   if (!enemyHeadPosition) {
     return false;
   }
