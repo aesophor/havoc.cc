@@ -13,9 +13,10 @@ class IClientEntityList {
 
   template <typename T = CEntity>
   constexpr std::add_pointer_t<T> GetEntityFromHandle(CBaseHandle handle) {
-    // This doesn't work with 64-bit clients, not sure why :(
+    // This doesn't work with 64-bit clients on linux and macOS, not sure why :(
     // return memory::CallVFunc<T *>(this, 4, handle);
-    // So we'll use the following workaround at the moment. 
+
+    // So we'll use the following workaround at the moment.
     return GetEntityFromIndex<T>(handle & 0xfff);
   }
 };
