@@ -3,6 +3,7 @@
 #define HAVOC_C_ITEM_DEFS_H_
 
 enum CItemDef : short {
+  WEAPON_UNDEFINED = 0,
   WEAPON_DEAGLE = 1,
   WEAPON_ELITE,
   WEAPON_FIVESEVEN,
