@@ -12,6 +12,7 @@
 #include "SDK/IEngineTrace.h"
 #include "SDK/IMaterialSystem.h"
 #include "SDK/IModelInfo.h"
+#include "SDK/IPhysicsSurfaceProps.h"
 #include "SDK/IStudioRender.h"
 
 namespace interfaces {
@@ -21,6 +22,7 @@ void Init();
 inline std::unique_ptr<Dylib> clientDylib;
 inline std::unique_ptr<Dylib> engineDylib;
 inline std::unique_ptr<Dylib> materialSystemDylib;
+inline std::unique_ptr<Dylib> physicsDylib;
 inline std::unique_ptr<Dylib> studioRenderDylib;
 inline std::unique_ptr<Dylib> sdlDylib;
 
@@ -32,6 +34,7 @@ inline IEngineClient *engine = nullptr;
 inline IEngineTrace *engineTrace = nullptr;
 inline IMaterialSystem *materialSystem = nullptr;
 inline IModelInfo *modelInfo = nullptr;
+inline IPhysicsSurfaceProps *physics = nullptr;
 inline IStudioRender *studioRender = nullptr;
 
 }  // namespace interfaces

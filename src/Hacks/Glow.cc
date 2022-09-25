@@ -40,7 +40,7 @@ bool GlowEffectSpectator(CBasePlayer *player, CLocalPlayer *localPlayer, GlowRen
 
   glowStyle = GlowRenderStyle::DEFAULT;
   glowColor = {242.0f / 255.0f, 117.0f / 255.0f, 117.0f / 255.0f};
-  alpha = 1.f;
+  alpha = userAlpha;
   return true;
 }
 

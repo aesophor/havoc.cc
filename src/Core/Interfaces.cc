@@ -21,6 +21,7 @@ void Init() {
   clientDylib = std::make_unique<Dylib>("client.dylib");
   engineDylib = std::make_unique<Dylib>("engine.dylib");
   materialSystemDylib = std::make_unique<Dylib>("materialsystem.dylib");
+  physicsDylib = std::make_unique<Dylib>("vphysics.dylib");
   studioRenderDylib = std::make_unique<Dylib>("studiorender.dylib");
   sdlDylib = std::make_unique<Dylib>("libSDL2-2.0.0.dylib");
 
@@ -31,6 +32,7 @@ void Init() {
   engineTrace = engineDylib->GetInterface<IEngineTrace>("EngineTraceClient");
   materialSystem = materialSystemDylib->GetInterface<IMaterialSystem>("VMaterialSystem");
   modelInfo = engineDylib->GetInterface<IModelInfo>("VModelInfoClient");
+  physics = physicsDylib->GetInterface<IPhysicsSurfaceProps>("VPhysicsSurfaceProps");
   studioRender = studioRenderDylib->GetInterface<IStudioRender>("VStudioRender");
 }
 

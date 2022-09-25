@@ -43,9 +43,13 @@ struct CVector {
   constexpr operator bool() const {
     return *this != CVector{};
   }
-  
+
   constexpr CVector Scale(float factor) const {
     return {x * factor, y * factor, z * factor};
+  }
+
+  constexpr float Dot(const CVector &other) const {
+    return x * other.x + y * other.y + z * other.z;
   }
 
   inline CVector ToAngle() const {

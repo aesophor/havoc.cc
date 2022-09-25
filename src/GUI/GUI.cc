@@ -8,6 +8,7 @@
 #include "Core/Hooks.h"
 #include "Core/Interfaces.h"
 #include "Hacks/Aimbot.h"
+#include "Hacks/AutoWall.h"
 #include "Hacks/Bhop.h"
 #include "Hacks/Chams.h"
 #include "Hacks/Glow.h"
@@ -68,10 +69,10 @@ void Render(SDL_Window *window) {
       ImGui::Checkbox("Automatic fire##aimbot", &hacks::aimbot::shouldAutoFire);
       ImGui::SliderInt("Fire delay (ms)##aimbot", &hacks::aimbot::fireDelayMs, 0, 1000);
       ImGui::Checkbox("Automatic scope##aimbot", &hacks::aimbot::shouldAutoScope);
-      ImGui::Checkbox("Automatic penetration##aimbot", &hacks::aimbot::shouldPenetrate);
+      ImGui::Checkbox("Autowall##aimbot", &hacks::autowall::isEnabled);
       ImGui::Checkbox("Shoot teammates##aimbot", &hacks::aimbot::shouldShootTeammates);
       ImGui::SliderFloat("Hit chance##aimbot", &hacks::aimbot::hitChance, 0.0f, 1.0f);
-       ImGui::EndDisabled();
+      ImGui::EndDisabled();
     }
     if (ImGui::CollapsingHeader("Chams")) {
       ImGui::Checkbox("Enabled##chams", &hacks::chams::isEnabled);
@@ -80,6 +81,7 @@ void Render(SDL_Window *window) {
       ImGui::Checkbox("Enabled##glow", &hacks::glow::isEnabled);
       ImGui::BeginDisabled(!hacks::glow::isEnabled);
       ImGui::Checkbox("Show teammates##glow", &hacks::glow::shouldShowTeammates);
+      ImGui::SliderFloat("Alpha#glow", &hacks::glow::userAlpha, 0.0f, 1.0f);
       ImGui::EndDisabled();
     }
     if (ImGui::CollapsingHeader("Bunny Hop")) {

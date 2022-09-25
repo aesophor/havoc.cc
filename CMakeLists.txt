@@ -24,6 +24,7 @@ add_library(
 	src/Core/NetVars.cc
 	src/Hacks/Skins.cc
 	src/Hacks/Aimbot.cc
+  src/Hacks/AutoWall.cc
   src/Hacks/Chams.cc
 	src/Hacks/Bhop.cc
 	src/Hacks/Glow.cc

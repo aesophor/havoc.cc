@@ -3,6 +3,7 @@
 #define HAVOC_I_ENGINE_TRACE_H_
 
 #include "Core/Memory.h"
+#include "SDK/HitGroup.h"
 
 #define CONTENTS_EMPTY 0
 #define CONTENTS_SOLID 0x1
@@ -118,7 +119,7 @@ class ITraceFilter {
 
 class CTraceFilter : public ITraceFilter {
  public:
-  CTraceFilter(CEntity *entity) : skipEntity(entity) {}
+  CTraceFilter(CEntity *entity = nullptr) : skipEntity(entity) {}
 
   bool ShouldHitEntity(CEntity *entity, int32_t contentsMask) override {
     return entity != this->skipEntity;
@@ -134,7 +135,8 @@ class CTraceFilter : public ITraceFilter {
 
 class CRay {
  public:
-  constexpr CRay(const CVector &start, const CVector &end) : start(start), delta(end - start) {
+  constexpr CRay(const CVector &start, const CVector &end)
+      : start(start), delta(end - start) {
     isSwept = delta.x || delta.y || delta.z;
   }
 
@@ -184,21 +186,29 @@ class CTrace {
   float fractionLeftSolid;
   CSurface surface;
 
-  int hitgroup;
+  HitGroup hitgroup;
 
   short physicsBone;
   uint16_t worldSurfaceIndex;
 
   CEntity *entity;
-  int hitbox;
+  Hitbox hitbox;
 };
 
 // interface itself
 class IEngineTrace {
  public:
-  constexpr void TraceRay(const CRay &ray, uint32_t mask, const CTraceFilter &filter,
-                          CTrace &trace) {
-    memory::CallVFunc<void>(this, 5, std::cref(ray), mask, std::cref(filter), std::ref(trace));
+	constexpr int GetPointContents(const CVector &absPosition,
+                                 int contentsMask = MASK_ALL,
+                                 IHandleEntity** entity = nullptr) {
+    return memory::CallVFunc<int>(
+        this, 0, std::cref(absPosition), contentsMask, entity);
+  }
+
+  constexpr void TraceRay(const CRay &ray, const uint32_t mask,
+                          const CTraceFilter &filter, CTrace &trace) {
+    memory::CallVFunc<void>(
+        this, 5, std::cref(ray), mask, std::cref(filter), std::ref(trace));
   }
 };
 

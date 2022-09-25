@@ -1,6 +1,6 @@
 // Copyright (c) 2022 Marco Wang <m.aesophor@gmail.com>. All rights reserved.
-#ifndef HAVOC_HIT_GROUPS_H_
-#define HAVOC_HIT_GROUPS_H_
+#ifndef HAVOC_HIT_GROUP_H_
+#define HAVOC_HIT_GROUP_H_
 
 enum class Bone : int {
   INVALID = -1,
@@ -13,6 +13,7 @@ enum class Bone : int {
   UPPER_SPINAL_COLUMN,
   NECK,
   HEAD,
+  SIZE
 };
 
 enum class Hitbox : int {
@@ -24,7 +25,7 @@ enum class Hitbox : int {
   ARMS,
 };
 
-enum class HitGroups : int {
+enum class HitGroup : int {
   GENERIC = 0,
   HEAD,
   CHEST,
@@ -36,4 +37,4 @@ enum class HitGroups : int {
   GEAR
 };
 
-#endif  // HAVOC_HIT_GROUPS_H_
+#endif  // HAVOC_HIT_GROUP_H_

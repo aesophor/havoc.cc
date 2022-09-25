@@ -5,14 +5,32 @@
 
 #include "Core/Hooks.h"
 #include "Core/Interfaces.h"
+#include "Hacks/AutoWall.h"
 #include "SDK/CEntity.h"
-#include "SDK/HitGroups.h"
-
-namespace {
-uint64_t lastFiredTimestamp = 0;  // in milliseconds
-}  // namespace
+#include "SDK/HitGroup.h"
 
 namespace hacks::aimbot {
+
+namespace {
+
+uint64_t lastFiredTimestamp = 0;  // in milliseconds
+
+void GetBestBone(CBasePlayer *player, float &bestDamage, Bone &bestBone) {
+  for (int i = 0; i < static_cast<int>(Bone::SIZE); i++) {
+    Bone bone = static_cast<Bone>(i);
+    CVector bonePos = player->GetBonePosition(bone);
+
+    hacks::autowall::FireBulletData data;
+    float damage = hacks::autowall::GetDamage(bonePos, true, data);
+
+    if (damage > bestDamage) {
+      bestDamage = damage;
+      bestBone = bone;
+    }
+  }
+}
+
+}  // namespace
 
 bool Init() {
   // VTable hijacking (ClientModeShared::CreateMove()).
@@ -55,16 +73,30 @@ void Run(CUserCmd *cmd) {
   float bestFov = 5.f;
 
   for (auto player : localPlayer->GetAllOtherPlayers()) {
-    if (player->IsDormant() ||
-        player->IsImmune() ||
-        !player->IsAlive() ||
-        (!shouldShootTeammates && !player->IsEnemy()) ||
-        !player->IsVisible(shouldPenetrate)) {
+    if (player->IsDormant() || player->IsImmune() || !player->IsAlive()) {
       continue;
     }
 
+    if (!shouldShootTeammates && !player->IsEnemy()) {
+      continue;
+    }
+
+    if (!hacks::autowall::isEnabled && !player->IsVisible()) {
+      continue;
+    }
+
+    float bestDamage = 0.f;
+    Bone bone = Bone::HEAD;
+
+    if (hacks::autowall::isEnabled) {
+      GetBestBone(player, bestDamage, bone);
+      if (bestDamage == 0.f) {
+        continue;
+      }
+    }
+
     CVector localEyePosition = localPlayer->GetEyePosition();
-    CVector enemyHeadPosition = player->GetBonePosition(Bone::HEAD);
+    CVector enemyHeadPosition = player->GetBonePosition(bone);
     CVector aimPunch = localPlayer->GetAimPunchAngle();
 
     CVector enemyAngle =

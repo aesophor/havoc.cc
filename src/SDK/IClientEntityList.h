@@ -7,7 +7,7 @@
 class IClientEntityList {
  public:
   template <typename T = CEntity>
-  constexpr std::add_pointer_t<T> GetEntityFromIndex(int index) {
+  constexpr std::add_pointer_t<T> GetEntityFromIndex(const int index) {
     return memory::CallVFunc<std::add_pointer_t<T>>(this, 3, index);
   }
 

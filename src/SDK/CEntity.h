@@ -11,10 +11,15 @@
 #include "SDK/CItemDefs.h"
 #include "SDK/CMatrix.h"
 #include "SDK/CVector.h"
-#include "SDK/HitGroups.h"
+#include "SDK/HitGroup.h"
 #include "Util/TypeTraits.h"
 
 using CBaseHandle = int;
+
+inline constexpr auto kMaxShootSounds = 16;
+inline constexpr auto kMaxWeaponString = 80;
+inline constexpr auto kMaxWeaponPrefix = 16;
+inline constexpr auto kMaxWeaponAmmoName = 32;
 
 struct Model {
   char name[255];
@@ -121,7 +126,7 @@ class CEntity : public IClientEntity {
     FL_UNBLOCKABLE_BY_PLAYER = (1 << 31)
   };
 
-  enum EWeaponType : int {
+  enum WeaponType : int {
     WEAPONTYPE_KNIFE = 0,
     WEAPONTYPE_PISTOL = 1,
     WEAPONTYPE_SUBMACHINEGUN = 2,
@@ -138,6 +143,27 @@ class CEntity : public IClientEntity {
     WEAPONTYPE_BUMPMINE = 14,
     WEAPONTYPE_TABLET = 15,
     WEAPONTYPE_MELEE = 16
+  };
+
+  enum WeaponSound {
+    WEAPONSOUND_EMPTY,
+    WEAPONSOUND_SINGLE,
+    WEAPONSOUND_SINGLE_NPC,
+    WEAPONSOUND_WPN_DOUBLE, // Can't be "DOUBLE" because windows.h uses it.
+    WEAPONSOUND_DOUBLE_NPC,
+    WEAPONSOUND_BURST,
+    WEAPONSOUND_RELOAD,
+    WEAPONSOUND_RELOAD_NPC,
+    WEAPONSOUND_MELEE_MISS,
+    WEAPONSOUND_MELEE_HIT,
+    WEAPONSOUND_MELEE_HIT_WORLD,
+    WEAPONSOUND_SPECIAL1,
+    WEAPONSOUND_SPECIAL2,
+    WEAPONSOUND_SPECIAL3,
+    WEAPONSOUND_TAUNT,
+    WEAPONSOUND_FAST_RELOAD,
+    // Add new shoot sound types here
+    WEAPONSOUND_SIZE
   };
 
   NETVAR(GetTeam, "CBaseEntity->m_iTeamNum", int &);
@@ -206,7 +232,7 @@ class CBasePlayer : public CEntity {
   }
 
   bool IsEnemy();
-  bool IsVisible(bool shouldPenetrate);
+  bool IsVisible();
   float GetDistanceFrom(CBasePlayer *player);
 };
 
@@ -354,12 +380,17 @@ class CBaseWeaponWorldModel : public CEntity {
  public:
 };
 
+class CWeaponInfo;
 class CBaseCombatWeapon : public CBaseAttributableItem {
  public:
   NETVAR(GetNextPrimaryAttack, "CBaseCombatWeapon->m_flNextPrimaryAttack", float &);
   NETVAR(GetOwner, "CBaseCombatWeapon->m_hOwner", CBaseHandle &);
   NETVAR(GetAmmo, "CBaseCombatWeapon->m_iClip1", unsigned int &);
   NETVAR(GetWeaponWorldModelHandle, "CBaseCombatWeapon->m_hWeaponWorldModel", CBaseHandle &);
+
+  CWeaponInfo* GetWeaponInfo() {
+    return memory::CallVFunc<CWeaponInfo *>(this, 524);
+	}
 
   float GetInaccuracy() {
     return memory::CallVFunc<float>(this, 551);
@@ -378,6 +409,109 @@ class CWeaponC4 : public CBaseCombatWeapon {
 class CChicken : public CEntity {
  public:
   NETVAR(ShouldGlow, "CDynamicProp->m_bShouldGlow", bool &);
+};
+
+class CHudTexture;
+class CFileWeaponInfo {
+ public:
+  // Each game can override this to get whatever values it wants from the script.
+  //virtual void Parse(KeyValues *pKeyValuesData, const char *szWeaponName);
+
+  bool isScriptParsed;
+  bool isHudElementsLoaded;
+
+  char classNames[kMaxWeaponString];
+  char printNames[kMaxWeaponString];
+
+  char viewModel[kMaxWeaponString];
+  char worldModel[kMaxWeaponString];
+  char ammo1[kMaxWeaponAmmoName];
+  char worldDroppedModel[kMaxWeaponString];
+  char animationPrefix[kMaxWeaponPrefix];
+  int slot;
+  int position;
+  int maxClip1;
+  int maxClip2;
+  int defaultClip1;
+  int defaultClip2;
+  int weight;
+  int rumbleEffect;
+  bool autoSwitchTo;
+  bool autoSwitchFrom;
+  int flags;
+  char ammo2[kMaxWeaponAmmoName];
+  char aiAddOn[kMaxWeaponString];
+
+  // Sound blocks
+  char shootSounds[CEntity::WEAPONSOUND_SIZE][kMaxWeaponString];
+
+  int ammoType;
+  int ammo2Type;
+  bool isMeleeWeapon;
+
+  // This tells if the weapon was built right-handed (defaults to true).
+  // This helps cl_righthand make the decision about whether to flip the model or not.
+  bool isBuiltRightHanded;
+  bool isFlippingAllowed;
+
+  // Sprite data, read from the data file
+  int iSpriteCount;
+  CHudTexture *iconActive;
+  CHudTexture *iconInactive;
+  CHudTexture *iconAmmo;
+  CHudTexture *iconAmmo2;
+  CHudTexture *iconCrosshair;
+  CHudTexture *iconAutoaim;
+  CHudTexture *iconZoomedCrosshair;
+  CHudTexture *iconZoomedAutoaim;
+  CHudTexture *iconSmall;
+};
+
+class CWeaponInfo : public CFileWeaponInfo {
+ public:
+   CEntity::WeaponType GetWeaponType() {
+    return *reinterpret_cast<CEntity::WeaponType *>((uintptr_t(this) + 0x864));
+  }
+
+  bool IsFullAuto() {
+    return *reinterpret_cast<bool *>((uintptr_t(this) + 0x870));
+  }
+
+  float GetWeaponArmorRatio() {
+    return *reinterpret_cast<float *>((uintptr_t(this) + 0x87c));
+  }
+
+  float GetMaxPlayerSpeed() {
+    return *reinterpret_cast<float *>((uintptr_t(this) + 0x880));
+  }
+
+  float GetMaxPlayerSpeedAlt() {
+    return *reinterpret_cast<float *>((uintptr_t(this) + 0x884));
+  }
+
+  float GetPenetration() {
+    return *reinterpret_cast<float *>((uintptr_t(this) + 0x890));
+  }
+
+  int GetDamage() {
+    return *reinterpret_cast<int *>((uintptr_t(this) + 0x894));
+  }
+
+  float GetRange() {
+    return *reinterpret_cast<float *>((uintptr_t(this) + 0x898));
+  }
+
+  float GetRangeModifier() {
+    return *reinterpret_cast<float *>((uintptr_t(this) + 0x89c));
+  }
+
+  float GetSpread() {
+    return *reinterpret_cast<float *>((uintptr_t(this) + 0xa4c));
+  }
+
+  int GetZoomLevels() {
+    return *reinterpret_cast<int *>((uintptr_t(this) + 0xee0));
+  }
 };
 
 #endif  // HAVOC_C_ENTITY_H_

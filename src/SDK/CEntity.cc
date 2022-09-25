@@ -11,27 +11,23 @@ bool CBasePlayer::IsEnemy() {
   return this != localPlayer && GetTeam() != localPlayer->GetTeam();
 }
 
-bool CBasePlayer::IsVisible(bool shouldPenetrate) {
+bool CBasePlayer::IsVisible() {
   auto localPlayer = CLocalPlayer::The();
+
   if (!localPlayer) {
     return false;
   }
 
   CVector enemyHeadPosition = GetBonePosition(Bone::HEAD);
+
   if (!enemyHeadPosition) {
     return false;
-  }
-
-  auto mask = MASK_SHOT;
-
-  if (shouldPenetrate) {
-    mask |= CONTENTS_GRATE;
   }
 
   CTrace trace;
   interfaces::engineTrace->TraceRay(
       CRay{localPlayer->GetEyePosition(), enemyHeadPosition},
-      mask,
+      MASK_SHOT | CONTENTS_GRATE,
       CTraceFilter{localPlayer},
       trace
   );
