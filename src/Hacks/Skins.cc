@@ -1,5 +1,5 @@
 // Copyright (c) 2022 Marco Wang <m.aesophor@gmail.com>. All rights reserved.
-#include "Bhop.h"
+#include "Skins.h"
 
 #include "Core/Hooks.h"
 #include "Core/Interfaces.h"
@@ -50,21 +50,15 @@ void Run() {
     auto weapon
       = interfaces::entityList->GetEntityFromHandle<CBaseAttributableItem>(handle);
 
-    if (!weapon) {
+    if (!weapon || knifeIdx == 0) {
       continue;
     }
 
-    switch (weapon->GetItemDefinitionIndex()) {
-      case WEAPON_KNIFE:
-      case WEAPON_KNIFE_T: {
-        weapon->GetItemDefinitionIndex() = WEAPON_KNIFE_BUTTERFLY;
-        weapon->GetFallbackWear() = 0.0001f;
-        weapon->GetEntityQuality() = 3;
-        weapon->GetItemIDHigh() = -1;
-        break;
-      }
-      default:
-        break;
+    if (weapon->IsKnife()) {
+      weapon->GetItemDefinitionIndex() = knifeModels[knifeIdx].itemDef;
+      weapon->GetFallbackWear() = 0.0001f;
+      weapon->GetEntityQuality() = 3;
+      weapon->GetItemIDHigh() = -1;
     }
   }
 
@@ -84,14 +78,9 @@ void Run() {
     return;
   }
 
-  switch (activeWeapon->GetItemDefinitionIndex()) {
-    case WEAPON_KNIFE_BUTTERFLY: {
-      int idx = interfaces::modelInfo->GetModelIndex("models/weapons/v_knife_butterfly.mdl");
-      viewModel->GetModelIndex() = idx;
-      break;
-    }
-    default:
-      break;
+  if (activeWeapon->IsKnife()) {
+    viewModel->GetModelIndex()
+        = interfaces::modelInfo->GetModelIndex(knifeModels[knifeIdx].modelPath);
   }
 }
 
@@ -116,6 +105,32 @@ void FixAnimations(CRecvProxyData *data, CBaseViewModel *viewModel, void *) {
           break;
         case CSequences::DEFAULT_LOOKAT01:
           nSequence = RandomInt(CSequences::BUTTERFLY_LOOKAT01, CSequences::BUTTERFLY_LOOKAT03);
+          break;
+        default:
+          nSequence++;
+          break;
+      }
+    } else if (modelName == "models/weapons/v_knife_falchion_advanced.mdl") {
+      switch (nSequence) {
+        case CSequences::DEFAULT_IDLE1:
+        case CSequences::DEFAULT_IDLE2:
+          nSequence = CSequences::FALCHION_IDLE1;
+          break;
+        case CSequences::DEFAULT_HEAVY_MISS1:
+          nSequence = RandomInt(CSequences::FALCHION_HEAVY_MISS1, CSequences::FALCHION_HEAVY_MISS1_NOFLIP);
+          break;
+        case CSequences::DEFAULT_LOOKAT01:
+          nSequence = RandomInt(CSequences::FALCHION_LOOKAT01, CSequences::FALCHION_LOOKAT02);
+          break;
+        default:
+          nSequence++;
+          break;
+      }
+    } else if (modelName == "models/weapons/v_knife_survival_bowie.mdl") {
+      switch (nSequence) {
+        case CSequences::DEFAULT_IDLE1:
+        case CSequences::DEFAULT_IDLE2:
+          nSequence = CSequences::BOWIE_IDLE1;
           break;
         default:
           nSequence++;

@@ -84,6 +84,23 @@ void Render(SDL_Window *window) {
       ImGui::Checkbox("Strafe##bhop", &hacks::bhop::shouldStrafe);
       ImGui::EndDisabled();
     }
+    if (ImGui::CollapsingHeader("Skins")) {
+      ImGui::Text("Knife model");
+      const auto &knifeModels = hacks::skins::knifeModels;
+
+      if (ImGui::BeginCombo("##skins", knifeModels[hacks::skins::knifeIdx].name)) {
+        for (int i = 0; i < hacks::skins::numKnifeModels; i++) {
+          const bool isSelected = i == hacks::skins::knifeIdx;
+          if (ImGui::Selectable(knifeModels[i].name, isSelected)) {
+            hacks::skins::knifeIdx = i;
+          }
+          if (isSelected) {
+            ImGui::SetItemDefaultFocus();
+          }
+        }
+        ImGui::EndCombo();
+      }
+    }
   }
 
   ImGui::End();

@@ -284,6 +284,7 @@ class CBaseAttributableItem : public CEntity {
 
   bool IsKnife() {
     switch (GetItemDefinitionIndex()) {
+      case WEAPON_BAYONET:
       case WEAPON_KNIFE:
       case WEAPON_KNIFE_T:
       case WEAPON_KNIFE_GUT:
