@@ -18,13 +18,17 @@ uintptr_t GetClientMode() {
 }
 
 void Init() {
+  // Internal dylibs
   clientDylib = std::make_unique<Dylib>("client.dylib");
   engineDylib = std::make_unique<Dylib>("engine.dylib");
   materialSystemDylib = std::make_unique<Dylib>("materialsystem.dylib");
   physicsDylib = std::make_unique<Dylib>("vphysics.dylib");
   studioRenderDylib = std::make_unique<Dylib>("studiorender.dylib");
+
+  // External dylibs
   sdlDylib = std::make_unique<Dylib>("libSDL2-2.0.0.dylib");
 
+  // Interface pointers
   client = clientDylib->GetInterface<IBaseClientDLL>("VClient");
   clientMode = reinterpret_cast<IClientMode *>(GetClientMode());
   entityList = clientDylib->GetInterface<IClientEntityList>("VClientEntityList");

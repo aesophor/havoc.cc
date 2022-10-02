@@ -19,14 +19,17 @@ namespace interfaces {
 
 void Init();
 
+// Internal dylibs
 inline std::unique_ptr<Dylib> clientDylib;
 inline std::unique_ptr<Dylib> engineDylib;
 inline std::unique_ptr<Dylib> materialSystemDylib;
 inline std::unique_ptr<Dylib> physicsDylib;
 inline std::unique_ptr<Dylib> studioRenderDylib;
+
+// External dylibs
 inline std::unique_ptr<Dylib> sdlDylib;
 
-// interface pointers
+// Interface pointers
 inline IBaseClientDLL *client = nullptr;
 inline IClientEntityList *entityList = nullptr;
 inline IClientMode *clientMode = nullptr;
