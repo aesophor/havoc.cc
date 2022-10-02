@@ -8,6 +8,7 @@
 #include "Core/Memory.h"
 #include "Core/NetVars.h"
 #include "SDK/CClientClass.h"
+#include "SDK/CCSWeaponInfo.h"
 #include "SDK/CItemDefs.h"
 #include "SDK/CMatrix.h"
 #include "SDK/CVector.h"
@@ -15,11 +16,6 @@
 #include "Util/TypeTraits.h"
 
 using CBaseHandle = int;
-
-inline constexpr auto kMaxShootSounds = 16;
-inline constexpr auto kMaxWeaponString = 80;
-inline constexpr auto kMaxWeaponPrefix = 16;
-inline constexpr auto kMaxWeaponAmmoName = 32;
 
 struct Model {
   char name[255];
@@ -81,7 +77,7 @@ class IClientEntity : public IClientUnknown,
                       public IClientThinkable {
  public:
   int &GetIndex() {
-    return *reinterpret_cast<int *>((uintptr_t(this) + 0x94));
+    return *reinterpret_cast<int *>(uintptr_t(this) + 0x94);
   }
 };
 
@@ -126,46 +122,6 @@ class CEntity : public IClientEntity {
     FL_UNBLOCKABLE_BY_PLAYER = (1 << 31)
   };
 
-  enum WeaponType : int {
-    WEAPONTYPE_KNIFE = 0,
-    WEAPONTYPE_PISTOL = 1,
-    WEAPONTYPE_SUBMACHINEGUN = 2,
-    WEAPONTYPE_RIFLE = 3,
-    WEAPONTYPE_SHOTGUN = 4,
-    WEAPONTYPE_SNIPER = 5,
-    WEAPONTYPE_MACHINEGUN = 6,
-    WEAPONTYPE_C4 = 7,
-    WEAPONTYPE_PLACEHOLDER = 8,
-    WEAPONTYPE_GRENADE = 9,
-    WEAPONTYPE_HEALTHSHOT = 11,
-    WEAPONTYPE_FISTS = 12,
-    WEAPONTYPE_BREACHCHARGE = 13,
-    WEAPONTYPE_BUMPMINE = 14,
-    WEAPONTYPE_TABLET = 15,
-    WEAPONTYPE_MELEE = 16
-  };
-
-  enum WeaponSound {
-    WEAPONSOUND_EMPTY,
-    WEAPONSOUND_SINGLE,
-    WEAPONSOUND_SINGLE_NPC,
-    WEAPONSOUND_WPN_DOUBLE, // Can't be "DOUBLE" because windows.h uses it.
-    WEAPONSOUND_DOUBLE_NPC,
-    WEAPONSOUND_BURST,
-    WEAPONSOUND_RELOAD,
-    WEAPONSOUND_RELOAD_NPC,
-    WEAPONSOUND_MELEE_MISS,
-    WEAPONSOUND_MELEE_HIT,
-    WEAPONSOUND_MELEE_HIT_WORLD,
-    WEAPONSOUND_SPECIAL1,
-    WEAPONSOUND_SPECIAL2,
-    WEAPONSOUND_SPECIAL3,
-    WEAPONSOUND_TAUNT,
-    WEAPONSOUND_FAST_RELOAD,
-    // Add new shoot sound types here
-    WEAPONSOUND_SIZE
-  };
-
   NETVAR(GetTeam, "CBaseEntity->m_iTeamNum", int &);
   NETVAR(GetWeaponHandles, "CBaseCombatCharacter->m_hMyWeapons", std::array<CBaseHandle, 64> &);
   NETVAR(GetActiveWeaponHandle, "CBaseCombatCharacter->m_hActiveWeapon", CBaseHandle &);
@@ -174,11 +130,11 @@ class CEntity : public IClientEntity {
   NETVAR(GetSpotted, "CBaseEntity->m_bSpotted", bool &);
 
   int GetId() {
-    return *reinterpret_cast<int *>((uintptr_t(this) + 0x94));
+    return *reinterpret_cast<int *>(uintptr_t(this) + 0x94);
   }
 
   bool IsDormant() {
-    return *reinterpret_cast<bool *>((uintptr_t(this) + 0x125));
+    return *reinterpret_cast<bool *>(uintptr_t(this) + 0x125);
   }
 };
 
@@ -253,7 +209,7 @@ class CBasePlantedC4 : public CEntity {
 
 class CBaseAttributableItem : public CEntity {
  public:
-  NETVAR(GetItemDefinitionIndex, "CBaseAttributableItem->m_iItemDefinitionIndex", short &);
+  NETVAR(GetItemDefinitionIndex, "CBaseAttributableItem->m_iItemDefinitionIndex", CItemDef &);
   NETVAR(GetItemIDHigh, "CBaseAttributableItem->m_iItemIDHigh", int &);
   NETVAR(GetAccountID, "CBaseAttributableItem->m_iAccountID", int &);
   NETVAR(GetEntityQuality, "CBaseAttributableItem->m_iEntityQuality", int &);
@@ -263,110 +219,12 @@ class CBaseAttributableItem : public CEntity {
   NETVAR(GetFallbackWear, "CBaseAttributableItem->m_flFallbackWear", float &);
   NETVAR(GetFallbackStatTrak, "CBaseAttributableItem->m_nFallbackStatTrak", int &);
 
-  bool IsPistol() {
-    switch (GetItemDefinitionIndex()) {
-      case WEAPON_DEAGLE:
-      case WEAPON_ELITE:
-      case WEAPON_FIVESEVEN:
-      case WEAPON_GLOCK:
-      case WEAPON_TEC9:
-      case WEAPON_HKP2000:
-      case WEAPON_USP_SILENCER:
-      case WEAPON_P250:
-      case WEAPON_CZ75A:
-      case WEAPON_REVOLVER:
-        return true;
-      default:
-        return false;
-    }
-  }
-
-  bool IsAutomatic() {
-    switch (GetItemDefinitionIndex()) {
-      case WEAPON_AK47:
-      case WEAPON_AUG:
-      case WEAPON_FAMAS:
-      case WEAPON_GALILAR:
-      case WEAPON_M249:
-      case WEAPON_M4A1:
-      case WEAPON_M4A1_SILENCER:
-      case WEAPON_MAC10:
-      case WEAPON_P90:
-      case WEAPON_MP5SD:
-      case WEAPON_UMP45:
-      case WEAPON_BIZON:
-      case WEAPON_NEGEV:
-      case WEAPON_MP7:
-      case WEAPON_MP9:
-      case WEAPON_SG556:
-        return true;
-      default:
-        return false;
-    }
-  }
-
-  bool IsKnife() {
-    switch (GetItemDefinitionIndex()) {
-      case WEAPON_BAYONET:
-      case WEAPON_KNIFE:
-      case WEAPON_KNIFE_T:
-      case WEAPON_KNIFE_GUT:
-      case WEAPON_KNIFEGG:
-      case WEAPON_KNIFE_CSS:
-      case WEAPON_KNIFE_CORD:
-      case WEAPON_KNIFE_FLIP:
-      case WEAPON_KNIFE_PUSH:
-      case WEAPON_KNIFE_CANIS:
-      case WEAPON_KNIFE_GHOST:
-      case WEAPON_KNIFE_URSUS:
-      case WEAPON_KNIFE_OUTDOOR:
-      case WEAPON_KNIFE_FALCHION:
-      case WEAPON_KNIFE_KARAMBIT:
-      case WEAPON_KNIFE_SKELETON:
-      case WEAPON_KNIFE_STILETTO:
-      case WEAPON_KNIFE_TACTICAL:
-      case WEAPON_KNIFE_BUTTERFLY:
-      case WEAPON_KNIFE_WIDOWMAKER:
-      case WEAPON_KNIFE_M9_BAYONET:
-      case WEAPON_KNIFE_SURVIVAL_BOWIE:
-      case WEAPON_KNIFE_GYPSY_JACKKNIFE:
-        return true;
-      default:
-        return false;
-    }
-  }
-
-  bool IsGrenade() {
-    switch (GetItemDefinitionIndex()) {
-      case WEAPON_SMOKEGRENADE:
-      case WEAPON_HEGRENADE:
-      case WEAPON_INCGRENADE:
-      case WEAPON_FLASHBANG:
-      case WEAPON_MOLOTOV:
-      case WEAPON_DECOY:
-        return true;
-      default:
-        return false;
-    }
-  }
-
-  bool IsBomb() {
-    return GetItemDefinitionIndex() == WEAPON_C4;
-  }
-
-  bool CanScope() {
-    switch (GetItemDefinitionIndex()) {
-      case WEAPON_AUG:
-      case WEAPON_AWP:
-      case WEAPON_G3SG1:
-      case WEAPON_SCAR20:
-      case WEAPON_SG556:
-      case WEAPON_SSG08:
-        return true;
-      default:
-        return false;
-    }
-  }
+  bool IsPistol() { return ::IsPistol(GetItemDefinitionIndex()); }
+  bool IsAutomatic() { return ::IsAutomatic(GetItemDefinitionIndex()); }
+  bool IsKnife() { return ::IsKnife(GetItemDefinitionIndex()); }
+  bool IsGrenade() { return ::IsGrenade(GetItemDefinitionIndex()); }
+  bool IsBomb() { return ::IsBomb(GetItemDefinitionIndex()); }
+  bool CanScope() { return ::CanScope(GetItemDefinitionIndex()); }
 };
 
 class CBaseViewModel : public CEntity {
@@ -380,7 +238,6 @@ class CBaseWeaponWorldModel : public CEntity {
  public:
 };
 
-class CWeaponInfo;
 class CBaseCombatWeapon : public CBaseAttributableItem {
  public:
   NETVAR(GetNextPrimaryAttack, "CBaseCombatWeapon->m_flNextPrimaryAttack", float &);
@@ -388,16 +245,9 @@ class CBaseCombatWeapon : public CBaseAttributableItem {
   NETVAR(GetAmmo, "CBaseCombatWeapon->m_iClip1", unsigned int &);
   NETVAR(GetWeaponWorldModelHandle, "CBaseCombatWeapon->m_hWeaponWorldModel", CBaseHandle &);
 
-  CWeaponInfo* GetWeaponInfo() {
-    return memory::CallVFunc<CWeaponInfo *>(this, 524);
-	}
-
-  float GetInaccuracy() {
-    return memory::CallVFunc<float>(this, 551);
-  }
-
-  float GetSpread() {
-    return memory::CallVFunc<float>(this, 552);
+  // https://github.com/LWSS/Fuzion/blob/master/src/SDK/IClientEntity.h#L738
+  CCSWeaponInfo *GetCSWpnData() {
+    return memory::CallVFunc<CCSWeaponInfo *>(this, 529);
   }
 };
 
@@ -409,109 +259,6 @@ class CWeaponC4 : public CBaseCombatWeapon {
 class CChicken : public CEntity {
  public:
   NETVAR(ShouldGlow, "CDynamicProp->m_bShouldGlow", bool &);
-};
-
-class CHudTexture;
-class CFileWeaponInfo {
- public:
-  // Each game can override this to get whatever values it wants from the script.
-  //virtual void Parse(KeyValues *pKeyValuesData, const char *szWeaponName);
-
-  bool isScriptParsed;
-  bool isHudElementsLoaded;
-
-  char classNames[kMaxWeaponString];
-  char printNames[kMaxWeaponString];
-
-  char viewModel[kMaxWeaponString];
-  char worldModel[kMaxWeaponString];
-  char ammo1[kMaxWeaponAmmoName];
-  char worldDroppedModel[kMaxWeaponString];
-  char animationPrefix[kMaxWeaponPrefix];
-  int slot;
-  int position;
-  int maxClip1;
-  int maxClip2;
-  int defaultClip1;
-  int defaultClip2;
-  int weight;
-  int rumbleEffect;
-  bool autoSwitchTo;
-  bool autoSwitchFrom;
-  int flags;
-  char ammo2[kMaxWeaponAmmoName];
-  char aiAddOn[kMaxWeaponString];
-
-  // Sound blocks
-  char shootSounds[CEntity::WEAPONSOUND_SIZE][kMaxWeaponString];
-
-  int ammoType;
-  int ammo2Type;
-  bool isMeleeWeapon;
-
-  // This tells if the weapon was built right-handed (defaults to true).
-  // This helps cl_righthand make the decision about whether to flip the model or not.
-  bool isBuiltRightHanded;
-  bool isFlippingAllowed;
-
-  // Sprite data, read from the data file
-  int iSpriteCount;
-  CHudTexture *iconActive;
-  CHudTexture *iconInactive;
-  CHudTexture *iconAmmo;
-  CHudTexture *iconAmmo2;
-  CHudTexture *iconCrosshair;
-  CHudTexture *iconAutoaim;
-  CHudTexture *iconZoomedCrosshair;
-  CHudTexture *iconZoomedAutoaim;
-  CHudTexture *iconSmall;
-};
-
-class CWeaponInfo : public CFileWeaponInfo {
- public:
-   CEntity::WeaponType GetWeaponType() {
-    return *reinterpret_cast<CEntity::WeaponType *>((uintptr_t(this) + 0x864));
-  }
-
-  bool IsFullAuto() {
-    return *reinterpret_cast<bool *>((uintptr_t(this) + 0x870));
-  }
-
-  float GetWeaponArmorRatio() {
-    return *reinterpret_cast<float *>((uintptr_t(this) + 0x87c));
-  }
-
-  float GetMaxPlayerSpeed() {
-    return *reinterpret_cast<float *>((uintptr_t(this) + 0x880));
-  }
-
-  float GetMaxPlayerSpeedAlt() {
-    return *reinterpret_cast<float *>((uintptr_t(this) + 0x884));
-  }
-
-  float GetPenetration() {
-    return *reinterpret_cast<float *>((uintptr_t(this) + 0x890));
-  }
-
-  int GetDamage() {
-    return *reinterpret_cast<int *>((uintptr_t(this) + 0x894));
-  }
-
-  float GetRange() {
-    return *reinterpret_cast<float *>((uintptr_t(this) + 0x898));
-  }
-
-  float GetRangeModifier() {
-    return *reinterpret_cast<float *>((uintptr_t(this) + 0x89c));
-  }
-
-  float GetSpread() {
-    return *reinterpret_cast<float *>((uintptr_t(this) + 0xa4c));
-  }
-
-  int GetZoomLevels() {
-    return *reinterpret_cast<int *>((uintptr_t(this) + 0xee0));
-  }
 };
 
 #endif  // HAVOC_C_ENTITY_H_

@@ -2,6 +2,7 @@
 #ifndef HAVOC_AUTO_WALL_H_
 #define HAVOC_AUTO_WALL_H_
 
+#include "SDK/CCSWeaponInfo.h"
 #include "SDK/CEntity.h"
 #include "SDK/HitGroup.h"
 #include "SDK/IEngineTrace.h"
@@ -20,12 +21,12 @@ struct FireBulletData {
   int penetrateCount;
 };
 
-inline bool isEnabled = false;
+inline bool isEnabled = true;
 
 float GetDamage(const CVector &dest, bool teamCheck, FireBulletData &fData);
 bool SimulateFireBullet(CBaseCombatWeapon *weapon,
                         bool teamCheck, FireBulletData &data);
-bool HandleBulletPenetration(CWeaponInfo *weaponInfo, FireBulletData &data);
+bool HandleBulletPenetration(CCSWeaponInfo *weaponInfo, FireBulletData &data);
 bool TraceToExit(CVector &end, CTrace &enterTrace, CVector start,
                  CVector dir, CTrace &exitTrace);
 void ScaleDamage(const HitGroup hitGroup, CBasePlayer *enemy,

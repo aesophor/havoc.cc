@@ -223,4 +223,149 @@ enum CItemDef : short {
   CUSTOMPLAYER_CTM_SAS_VARIANTF
 };
 
+enum CWeaponType : int {
+  WEAPONTYPE_KNIFE = 0,
+  WEAPONTYPE_PISTOL = 1,
+  WEAPONTYPE_SUBMACHINEGUN = 2,
+  WEAPONTYPE_RIFLE = 3,
+  WEAPONTYPE_SHOTGUN = 4,
+  WEAPONTYPE_SNIPER = 5,
+  WEAPONTYPE_MACHINEGUN = 6,
+  WEAPONTYPE_C4 = 7,
+  WEAPONTYPE_PLACEHOLDER = 8,
+  WEAPONTYPE_GRENADE = 9,
+  WEAPONTYPE_HEALTHSHOT = 11,
+  WEAPONTYPE_FISTS = 12,
+  WEAPONTYPE_BREACHCHARGE = 13,
+  WEAPONTYPE_BUMPMINE = 14,
+  WEAPONTYPE_TABLET = 15,
+  WEAPONTYPE_MELEE = 16
+};
+
+enum CWeaponSound {
+  WEAPONSOUND_EMPTY,
+  WEAPONSOUND_SINGLE,
+  WEAPONSOUND_SINGLE_NPC,
+  WEAPONSOUND_WPN_DOUBLE, // Can't be "DOUBLE" because windows.h uses it.
+  WEAPONSOUND_DOUBLE_NPC,
+  WEAPONSOUND_BURST,
+  WEAPONSOUND_RELOAD,
+  WEAPONSOUND_RELOAD_NPC,
+  WEAPONSOUND_MELEE_MISS,
+  WEAPONSOUND_MELEE_HIT,
+  WEAPONSOUND_MELEE_HIT_WORLD,
+  WEAPONSOUND_SPECIAL1,
+  WEAPONSOUND_SPECIAL2,
+  WEAPONSOUND_SPECIAL3,
+  WEAPONSOUND_TAUNT,
+  WEAPONSOUND_FAST_RELOAD,
+  // Add new shoot sound types here
+  WEAPONSOUND_SIZE
+};
+
+inline bool IsPistol(const CItemDef def) {
+  switch (def) {
+    case WEAPON_DEAGLE:
+    case WEAPON_ELITE:
+    case WEAPON_FIVESEVEN:
+    case WEAPON_GLOCK:
+    case WEAPON_TEC9:
+    case WEAPON_HKP2000:
+    case WEAPON_USP_SILENCER:
+    case WEAPON_P250:
+    case WEAPON_CZ75A:
+    case WEAPON_REVOLVER:
+      return true;
+    default:
+      return false;
+  }
+}
+
+inline bool IsAutomatic(const CItemDef def) {
+  switch (def) {
+    case WEAPON_AK47:
+    case WEAPON_AUG:
+    case WEAPON_FAMAS:
+    case WEAPON_GALILAR:
+    case WEAPON_M249:
+    case WEAPON_M4A1:
+    case WEAPON_M4A1_SILENCER:
+    case WEAPON_MAC10:
+    case WEAPON_P90:
+    case WEAPON_MP5SD:
+    case WEAPON_UMP45:
+    case WEAPON_BIZON:
+    case WEAPON_NEGEV:
+    case WEAPON_MP7:
+    case WEAPON_MP9:
+    case WEAPON_SG556:
+      return true;
+    default:
+      return false;
+  }
+}
+
+inline bool IsKnife(const CItemDef def) {
+  switch (def) {
+    case WEAPON_BAYONET:
+    case WEAPON_KNIFE:
+    case WEAPON_KNIFE_T:
+    case WEAPON_KNIFE_GUT:
+    case WEAPON_KNIFEGG:
+    case WEAPON_KNIFE_CSS:
+    case WEAPON_KNIFE_CORD:
+    case WEAPON_KNIFE_FLIP:
+    case WEAPON_KNIFE_PUSH:
+    case WEAPON_KNIFE_CANIS:
+    case WEAPON_KNIFE_GHOST:
+    case WEAPON_KNIFE_URSUS:
+    case WEAPON_KNIFE_OUTDOOR:
+    case WEAPON_KNIFE_FALCHION:
+    case WEAPON_KNIFE_KARAMBIT:
+    case WEAPON_KNIFE_SKELETON:
+    case WEAPON_KNIFE_STILETTO:
+    case WEAPON_KNIFE_TACTICAL:
+    case WEAPON_KNIFE_BUTTERFLY:
+    case WEAPON_KNIFE_WIDOWMAKER:
+    case WEAPON_KNIFE_M9_BAYONET:
+    case WEAPON_KNIFE_SURVIVAL_BOWIE:
+    case WEAPON_KNIFE_GYPSY_JACKKNIFE:
+      return true;
+    default:
+      return false;
+  }
+}
+
+inline bool IsGrenade(const CItemDef def) {
+  switch (def) {
+    case WEAPON_SMOKEGRENADE:
+    case WEAPON_HEGRENADE:
+    case WEAPON_INCGRENADE:
+    case WEAPON_FLASHBANG:
+    case WEAPON_MOLOTOV:
+    case WEAPON_DECOY:
+      return true;
+    default:
+      return false;
+  }
+}
+
+inline bool IsBomb(const CItemDef def) {
+  return def == WEAPON_C4;
+}
+
+inline bool CanScope(const CItemDef def) {
+  switch (def) {
+    case WEAPON_AUG:
+    case WEAPON_AWP:
+    case WEAPON_G3SG1:
+    case WEAPON_SCAR20:
+    case WEAPON_SG556:
+    case WEAPON_SSG08:
+      return true;
+    default:
+      return false;
+  }
+}
+
 #endif  // HAVOC_C_ITEM_DEFS_H_

@@ -42,7 +42,10 @@ float GetDamage(const CVector &dest, bool teamCheck, FireBulletData &fData) {
 bool SimulateFireBullet(CBaseCombatWeapon* weapon,
                         bool teamCheck, FireBulletData &data) {
   auto localPlayer = CLocalPlayer::The();
-  CWeaponInfo *weaponInfo = weapon->GetWeaponInfo();
+  CCSWeaponInfo *weaponInfo = weapon->GetCSWpnData();
+
+  printf("CCSWeaponInfo = {weaponType: %d, damage: %d}\n",
+      weaponInfo->GetWeaponType(), weaponInfo->GetDamage());
 
   data.penetrateCount = 4;
   data.traceLength = 0.0f;
@@ -102,7 +105,7 @@ bool SimulateFireBullet(CBaseCombatWeapon* weapon,
   return false;
 }
 
-bool HandleBulletPenetration(CWeaponInfo* weaponInfo, FireBulletData &data) {
+bool HandleBulletPenetration(CCSWeaponInfo* weaponInfo, FireBulletData &data) {
   CSurfaceData *enterSurfaceData
     = interfaces::physics->GetSurfaceData(data.enterTrace.surface.surfaceProps);
 
