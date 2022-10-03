@@ -6,6 +6,8 @@
 #include <cstdint>
 #include <numbers>
 
+#include "Util/Math.h"
+
 #define CVECTOR_DEF_OPERATOR_CONST(op)                        \
   constexpr CVector operator op(const CVector &other) const { \
     return {x op other.x, y op other.y, z op other.z};        \
@@ -44,7 +46,7 @@ struct CVector {
     return *this != CVector{};
   }
 
-  constexpr CVector Scale(float factor) const {
+  constexpr CVector Scale(const float factor) const {
     return {x * factor, y * factor, z * factor};
   }
 
@@ -58,6 +60,29 @@ struct CVector {
       std::atan2(y, x) * (180.0f / std::numbers::pi_v<float>),
       0.0f
     };
+  }
+
+  inline CVector ToDirection() const {
+    float sp, sy, cp, cy;
+    SinCos(Deg2Rad(y), sy, cy);
+    SinCos(Deg2Rad(x), sp, cp);
+    return CVector{cp * cy, cp * sy, -sp}.Normalize();
+  }
+
+  inline CVector Normalize() const {
+    CVector ret;
+    float length = std::hypot(x, y, z);
+
+    if (length != 0.0f) {
+      ret.x = x / length;
+      ret.y = y / length;
+      ret.z = z / length;
+    } else {
+      ret.x = ret.y = 0.0f;
+      ret.z = 1.0f;
+    }
+
+    return ret;
   }
 };
 
