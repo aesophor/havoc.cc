@@ -21,17 +21,9 @@ struct FireBulletData {
   int penetrateCount;
 };
 
-inline bool isEnabled = true;
+inline bool isEnabled = false;
 
 float GetDamage(const CVector &dest, bool teamCheck, FireBulletData &fData);
-bool SimulateFireBullet(CBaseCombatWeapon *weapon,
-                        bool teamCheck, FireBulletData &data);
-bool HandleBulletPenetration(CCSWeaponInfo *weaponInfo, FireBulletData &data);
-bool TraceToExit(CVector &end, CTrace &enterTrace, CVector start,
-                 CVector dir, CTrace &exitTrace);
-void ScaleDamage(const HitGroup hitGroup, CBasePlayer *enemy,
-                 const float weaponArmorRatio, float &currentDamage);
-float GetHitgroupDamageMultiplier(const HitGroup hitGroup);
 
 }  // namespace hacks::autowall
 
