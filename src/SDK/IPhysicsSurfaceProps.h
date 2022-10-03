@@ -11,61 +11,16 @@ struct CSurfacePhysicsParams {
   float dampening;
 };
 
-struct CSurfaceAudioParams {
-  float reflectivity;
-  float hardnessFactor;
-  float roughnessFactor;
-  float roughThreshold;
-  float hardThreshold;
-  float hardVelocityThreshold;
-};
-
-struct CSurfaceSoundNames {
-  unsigned short walkStepLeft;
-  unsigned short walkStepRight;
-  unsigned short runStepLeft;
-  unsigned short runStepRight;
-  unsigned short impactSoft;
-  unsigned short impactHard;
-  unsigned short scrapeSmooth;
-  unsigned short scrapeRough;
-  unsigned short bulletImpact;
-  unsigned short rolling;
-  unsigned short breakSound;
-  unsigned short strainSound;
-};
-
-struct CSurfaceSoundHandles {
-  short walkStepLeft;
-  short walkStepRight;
-  short runStepLeft;
-  short runStepRight;
-  short impactSoft;
-  short impactHard;
-  short scrapeSmooth;
-  short scrapeRough;
-  short bulletImpact;
-  short rolling;
-  short breakSound;
-  short strainSound;
-};
-
 struct CSurfaceGameProps {
-  float maxSpeedFactor;
-  float jumpFactor;
-  char pad00[0x4];
-  float flPenetrationModifier;
-  float flDamageModifier;
+  float penetrationModifier;
+  float damageModifier;
   unsigned short material;
-  char pad01[0x3];
 };
 
 struct CSurfaceData {
   CSurfacePhysicsParams physics;
-  CSurfaceAudioParams audio;
-  CSurfaceSoundNames sounds;
+  char __pad0[68];
   CSurfaceGameProps game;
-  CSurfaceSoundHandles soundhandles;
 };
 
 class IPhysicsSurfaceProps {

@@ -133,8 +133,7 @@ class CTraceFilter : public ITraceFilter {
   const CEntity *skipEntity;
 };
 
-class CRay {
- public:
+struct CRay {
   constexpr CRay(const CVector &start, const CVector &end)
       : start(start), delta(end - start) {
     isSwept = delta.x || delta.y || delta.z;
@@ -153,8 +152,7 @@ class CRay {
   bool isSwept;
 };
 
-class CPlane {
- public:
+struct CPlane {
   CVector normal;
   float distance;
   std::byte type;
@@ -162,15 +160,13 @@ class CPlane {
   std::byte pad[2];
 };
 
-class CSurface {
- public:
+struct CSurface {
   const char *name;
   short surfaceProps;
   uint16_t flags;
 };
 
-class CTrace {
- public:
+struct CTrace {
   CVector startPos;
   CVector endPos;
   CPlane plane;
@@ -178,24 +174,23 @@ class CTrace {
   float fraction;
 
   int contents;
-  uint16_t dispFlags;
+  unsigned int dispFlags;
 
   bool allSolid;
   bool startSolid;
 
   float fractionLeftSolid;
+
   CSurface surface;
 
   HitGroup hitgroup;
-
   short physicsBone;
-  uint16_t worldSurfaceIndex;
 
+  unsigned short worldSurfaceIndex;
   CEntity *entity;
   Hitbox hitbox;
 };
 
-// interface itself
 class IEngineTrace {
  public:
 	constexpr int GetPointContents(const CVector &absPosition,
