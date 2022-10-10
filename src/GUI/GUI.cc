@@ -62,7 +62,7 @@ void Render(SDL_Window *window) {
   ImGui_ImplSDL2_NewFrame(window);
   ImGui::NewFrame();
 
-  if (ImGui::Begin("Havoc")) {
+  if (ImGui::Begin("havoc.cc")) {
     if (ImGui::CollapsingHeader("Aimbot")) {
       ImGui::Checkbox("Enabled##aimbot", &hacks::aimbot::isEnabled);
       ImGui::BeginDisabled(!hacks::aimbot::isEnabled);
