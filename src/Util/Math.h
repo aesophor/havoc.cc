@@ -16,4 +16,8 @@ constexpr float Deg2Rad(const float deg) {
   return deg * std::numbers::pi_v<float> / 180.f;
 }
 
+constexpr float Rad2Deg(const float rad) {
+  return 180.0f * rad / std::numbers::pi_v<float>;
+}
+
 #endif  // HAVOC_MATH_H_
