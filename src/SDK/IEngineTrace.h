@@ -193,7 +193,7 @@ struct CTrace {
 
 class IEngineTrace {
  public:
-	constexpr int GetPointContents(const CVector &absPosition,
+  constexpr int GetPointContents(const CVector &absPosition,
                                  int contentsMask = MASK_ALL,
                                  IHandleEntity** entity = nullptr) {
     return memory::CallVFunc<int>(

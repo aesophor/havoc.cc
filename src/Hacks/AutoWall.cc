@@ -35,7 +35,7 @@ void ScaleDamage(const HitGroup hitGroup, CBasePlayer* enemy,
 
   if (hitGroup != HitGroup::HEAD || enemy->HasHelmet()) {
     currentDamage *= weaponArmorRatio * 0.5f;
-	}
+  }
 }
 
 bool TraceToExit(CVector &end, CTrace &enterTrace, CVector start,
@@ -96,9 +96,9 @@ bool TraceToExit(CVector &end, CTrace &enterTrace, CVector start,
       end -= dir.Scale(fraction);
       return true;
     }
-	}
+  }
 
-	return false;
+  return false;
 }
 
 bool HandleBulletPenetration(CCSWeaponInfo* weaponInfo, FireBulletData &data) {
@@ -242,6 +242,10 @@ bool SimulateFireBullet(CBaseCombatWeapon* weapon,
   }
 
   return false;
+}
+
+bool Init() {
+  return true;
 }
 
 float GetDamage(const CVector &dest, bool teamCheck, FireBulletData &fData) {
