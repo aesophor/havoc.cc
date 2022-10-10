@@ -7,6 +7,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <string>
+#include <string_view>
 
 #include "Util/TypeTraits.h"
 
@@ -15,7 +16,7 @@ class Dylib final {
   MAKE_NONMOVABLE(Dylib);
 
   struct InterfaceReg {
-    using CreateFn = void *(*) ();
+    using CreateFn = void *(*)();
 
     CreateFn createFn;
     char *name;
@@ -25,7 +26,7 @@ class Dylib final {
  public:
   explicit Dylib(const std::string &name);
 
-  uintptr_t ScanSignature(const uint8_t *sig, const std::string &mask) const;
+  uintptr_t ScanSignature(const std::string_view sig) const;
 
   template <typename T>
   T *GetInterface(const std::string &symbol, bool exact = false) const {
@@ -52,7 +53,7 @@ class Dylib final {
   }
 
  private:
-  bool Compare(const uint8_t *data, const uint8_t *sig, const std::string &mask) const;
+  bool Compare(const char *data, const std::string_view sig) const;
 
   std::string name;
   void *handle;

@@ -10,14 +10,10 @@ namespace hacks::glow {
 
 bool Init() {
   // The signature of GlowEffectSpectator().
-  constexpr uint8_t kSig[] = {0x55, 0x48, 0x89, 0xe5, 0x41, 0x57, 0x41, 0x56,
-                              0x41, 0x55, 0x41, 0x54, 0x53, 0x48, 0x83, 0xec,
-                              0x38, 0x48, 0x89, 0xcb, 0x49, 0x89, 0xf4};
-  constexpr char kMask[] = "xxxxxxxxxxxxxxxxxxxxxxx";
+  constexpr std::string_view kSig = "\x55\x48\x89\xe5\x41\x57\x41\x56\x41\x55\x41\x54\x53"
+                                    "\x48\x83\xec\x38\x48\x89\xcb\x49\x89\xf4";
 
-  // Obtain the runtime address of GlowEffectSpectator().
-  uintptr_t addr = interfaces::clientDylib->ScanSignature(kSig, kMask);
-
+  uintptr_t addr = interfaces::clientDylib->ScanSignature(kSig);
   if (!addr) {
     return false;
   }

@@ -2,16 +2,14 @@
 #include "Interfaces.h"
 
 #include "Core/Hooks.h"
+#include "Core/Memory.h"
 
 namespace interfaces {
 
 uintptr_t GetClientMode() {
-  // Find IClientMode using signature scanning.
-  constexpr uint8_t kSig[] = {0x48, 0x8b, 0xb7, 0x00, 0x00, 0x00, 0x00, 0x48,
-                              0x8d, 0x3d, 0x00, 0x00, 0x00, 0x00, 0x5d, 0xe9};
-  constexpr char kMask[] = "xxx????xxx????xx";
+  constexpr std::string_view kSig = "\x48\x8b\xb7????\x48\x8d\x3d????\x5d\xe9";
 
-  uintptr_t sigAddr = clientDylib->ScanSignature(kSig, kMask) + 0xa;
+  uintptr_t sigAddr = clientDylib->ScanSignature(kSig) + 0xa;
   uintptr_t fileOffset = sigAddr - clientDylib->GetBase();
   uintptr_t offset = *reinterpret_cast<uint32_t *>(sigAddr);
   return clientDylib->GetBase() + (offset + fileOffset) + 0x4;
