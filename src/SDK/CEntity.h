@@ -2,12 +2,14 @@
 #ifndef HAVOC_C_ENTITY_H_
 #define HAVOC_C_ENTITY_H_
 
+#include <cassert>
 #include <array>
 #include <vector>
 
 #include "Core/Memory.h"
 #include "Core/NetVars.h"
 #include "SDK/CClientClass.h"
+#include "SDK/CCSGOAnimState.h"
 #include "SDK/CCSWeaponInfo.h"
 #include "SDK/CItemDefs.h"
 #include "SDK/CMatrix.h"
@@ -122,12 +124,30 @@ class CEntity : public IClientEntity {
     FL_UNBLOCKABLE_BY_PLAYER = (1 << 31)
   };
 
+  enum MoveType {
+    MOVETYPE_NONE = 0,
+    MOVETYPE_ISOMETRIC,
+    MOVETYPE_WALK,
+    MOVETYPE_STEP,
+    MOVETYPE_FLY,
+    MOVETYPE_FLYGRAVITY,
+    MOVETYPE_VPHYSICS,
+    MOVETYPE_PUSH,
+    MOVETYPE_NOCLIP,
+    MOVETYPE_LADDER,
+    MOVETYPE_OBSERVER,
+    MOVETYPE_CUSTOM,
+    MOVETYPE_LAST = MOVETYPE_CUSTOM,
+    MOVETYPE_MAX_BITS = 4
+  };
+
   NETVAR(GetTeam, "CBaseEntity->m_iTeamNum", int &);
   NETVAR(GetWeaponHandles, "CBaseCombatCharacter->m_hMyWeapons", std::array<CBaseHandle, 64> &);
   NETVAR(GetActiveWeaponHandle, "CBaseCombatCharacter->m_hActiveWeapon", CBaseHandle &);
   NETVAR(GetVecOrigin, "CBaseEntity->m_vecOrigin", CVector &);
   NETVAR(GetCollideable, "CBaseEntity->m_Collision", ICollideable *);
   NETVAR(GetSpotted, "CBaseEntity->m_bSpotted", bool &);
+  NETVAR(GetMoveType, "CBaseEntity->m_MoveType", CEntity::MoveType);
 
   int GetId() {
     return *reinterpret_cast<int *>(uintptr_t(this) + 0x94);
@@ -168,6 +188,11 @@ class CBasePlayer : public CEntity {
   NETVAR(IsImmune, "CCSPlayer->m_bGunGameImmunity", bool &);
   NETVAR(IsGhost, "CCSPlayer->m_bIsPlayerGhost", bool &);
 
+  CCSGOAnimState* GetAnimState() {
+    assert(playerAnimStateOffset && "CBasePlayer::playerAnimStateOffset must not be zero.");
+    return *reinterpret_cast<CCSGOAnimState **>(uintptr_t(this) + playerAnimStateOffset);
+  }
+
   bool IsAlive() {
     return GetHealth() > 0;
   }
@@ -190,6 +215,8 @@ class CBasePlayer : public CEntity {
   bool IsEnemy();
   bool IsVisible();
   float GetDistanceFrom(CBasePlayer *player);
+
+  static inline unsigned int playerAnimStateOffset = 0;
 };
 
 class CLocalPlayer : public CBasePlayer {
@@ -220,6 +247,7 @@ class CBaseAttributableItem : public CEntity {
   NETVAR(GetFallbackStatTrak, "CBaseAttributableItem->m_nFallbackStatTrak", int &);
 
   bool IsPistol() { return ::IsPistol(GetItemDefinitionIndex()); }
+  bool IsRevolver() { return ::IsRevolver(GetItemDefinitionIndex()); }
   bool IsAutomatic() { return ::IsAutomatic(GetItemDefinitionIndex()); }
   bool IsKnife() { return ::IsKnife(GetItemDefinitionIndex()); }
   bool IsGrenade() { return ::IsGrenade(GetItemDefinitionIndex()); }

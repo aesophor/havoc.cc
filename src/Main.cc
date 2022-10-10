@@ -3,6 +3,8 @@
 #include "Core/NetVars.h"
 #include "GUI/GUI.h"
 #include "Hacks/Aimbot.h"
+#include "Hacks/AntiAim.h"
+#include "Hacks/AutoWall.h"
 #include "Hacks/Bhop.h"
 #include "Hacks/Chams.h"
 #include "Hacks/Glow.h"
@@ -14,6 +16,8 @@ void __attribute__((constructor)) OnDylibLoad() {
   gui::Init();
 
   hacks::aimbot::Init();
+  hacks::antiaim::Init();
+  hacks::autowall::Init();
   hacks::bhop::Init();
   hacks::chams::Init();
   hacks::glow::Init();

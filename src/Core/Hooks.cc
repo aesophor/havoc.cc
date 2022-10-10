@@ -12,6 +12,7 @@
 
 #include "Core/Interfaces.h"
 #include "Hacks/Aimbot.h"
+#include "Hacks/AntiAim.h"
 #include "Hacks/Bhop.h"
 #include "Hacks/Chams.h"
 #include "Hacks/Glow.h"
@@ -58,10 +59,17 @@ bool CreateMove(IClientMode *thisptr, float frameTime, CUserCmd *cmd) {
   if (localPlayer && localPlayer->IsAlive()) {
     hacks::bhop::Run(cmd);
     hacks::aimbot::Run(cmd);
+    hacks::antiaim::Run(cmd);
+  }
+
+  if (createMoveShouldSendPacket) {
+    createMoveLastTickViewAngles = cmd->viewAngles;
   }
 
   if (originalCreateMove(interfaces::clientMode, frameTime, cmd)) {
-    interfaces::engine->SetViewAngles(cmd->viewAngles);
+    if (shouldSetLocal) {
+      interfaces::engine->SetViewAngles(cmd->viewAngles);
+    }
   }
 
   return false;

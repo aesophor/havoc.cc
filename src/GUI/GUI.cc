@@ -8,6 +8,7 @@
 #include "Core/Hooks.h"
 #include "Core/Interfaces.h"
 #include "Hacks/Aimbot.h"
+#include "Hacks/AntiAim.h"
 #include "Hacks/AutoWall.h"
 #include "Hacks/Bhop.h"
 #include "Hacks/Chams.h"
@@ -65,13 +66,25 @@ void Render(SDL_Window *window) {
     if (ImGui::CollapsingHeader("Aimbot")) {
       ImGui::Checkbox("Enabled##aimbot", &hacks::aimbot::isEnabled);
       ImGui::BeginDisabled(!hacks::aimbot::isEnabled);
-      ImGui::Checkbox("Legit##aimbot", &hacks::aimbot::isLegit);
+      ImGui::Checkbox("Rage##aimbot", &hacks::aimbot::shouldRage);
       ImGui::Checkbox("Automatic fire##aimbot", &hacks::aimbot::shouldAutoFire);
       ImGui::SliderInt("Fire delay (ms)##aimbot", &hacks::aimbot::fireDelayMs, 0, 1000);
       ImGui::Checkbox("Automatic scope##aimbot", &hacks::aimbot::shouldAutoScope);
       ImGui::Checkbox("Autowall##aimbot", &hacks::autowall::isEnabled);
       ImGui::Checkbox("Shoot teammates##aimbot", &hacks::aimbot::shouldShootTeammates);
       ImGui::SliderFloat("Hit chance##aimbot", &hacks::aimbot::hitChance, 0.0f, 1.0f);
+      ImGui::EndDisabled();
+    }
+    if (ImGui::CollapsingHeader("AntiAim")) {
+      ImGui::Checkbox("Enabled##antiaim", &hacks::antiaim::isEnabled);
+      ImGui::BeginDisabled(!hacks::antiaim::isEnabled);
+      ImGui::Checkbox("Set local viewangles##antiaim", &hooks::shouldSetLocal);
+      ImGui::Checkbox("Yaw##antiaim", &hacks::antiaim::isYawEnabled);
+      ImGui::Checkbox("Pitch##antiaim", &hacks::antiaim::isPitchEnabled);
+      ImGui::Checkbox("Head edge##antiaim", &hacks::antiaim::isHeadEdgeEnabled);
+      ImGui::Checkbox("LBT breaker##antiaim", &hacks::antiaim::isLBYBreakerEnabled);
+      ImGui::SliderInt("yawType##antiaim", &(int &) hacks::antiaim::yawType, 0, 4);
+      ImGui::SliderInt("pitchType##antiaim", &(int &) hacks::antiaim::pitchType, 0, 3);
       ImGui::EndDisabled();
     }
     if (ImGui::CollapsingHeader("Chams")) {
@@ -81,7 +94,7 @@ void Render(SDL_Window *window) {
       ImGui::Checkbox("Enabled##glow", &hacks::glow::isEnabled);
       ImGui::BeginDisabled(!hacks::glow::isEnabled);
       ImGui::Checkbox("Show teammates##glow", &hacks::glow::shouldShowTeammates);
-      ImGui::SliderFloat("Alpha#glow", &hacks::glow::userAlpha, 0.0f, 1.0f);
+      ImGui::SliderFloat("Alpha##glow", &hacks::glow::userAlpha, 0.0f, 1.0f);
       ImGui::EndDisabled();
     }
     if (ImGui::CollapsingHeader("Bunny Hop")) {

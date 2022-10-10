@@ -4,6 +4,8 @@
 
 #include <cstdint>
 
+#include "SDK/CVector.h"
+
 class CBasePlayer;
 class CBaseViewModel;
 class CDrawModelInfo;
@@ -56,6 +58,10 @@ inline SwapWindowFn originalSwapWindow = nullptr;
 
 using PollEventFn = int (*)(SDL_Event *event);
 inline PollEventFn originalPollEvent = nullptr;
+
+inline bool shouldSetLocal = true;
+inline bool createMoveShouldSendPacket = false;
+inline CVector createMoveLastTickViewAngles{};
 
 }  // namespace hooks
 

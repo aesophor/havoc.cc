@@ -69,6 +69,46 @@ struct CVector {
     return CVector{cp * cy, cp * sy, -sp}.Normalize();
   }
 
+  inline CVector Clamp() const {
+    CVector ret{x, y, 0};
+
+    if (ret.y > 180.0f) {
+      ret.y = 180.0f;
+    } else if (ret.y < -180.0f) {
+      ret.y = -180.0f;
+    }
+
+    if (ret.x > 89.0f) {
+      ret.x = 89.0f;
+    } else if (ret.x < -89.0f) {
+      ret.x = -89.0f;
+    }
+
+    return ret;
+  }
+
+  inline CVector NormalizeAngle() const {
+    CVector ret{x, y, 0};
+
+    while (ret.x > 89.0f) {
+      ret.x -= 180.f;
+    }
+
+    while (ret.x < -89.0f) {
+      ret.x += 180.f;
+    }
+
+    while (ret.y > 180.f) {
+      ret.y -= 360.f;
+    }
+
+    while (ret.y < -180.f) {
+      ret.y += 360.f;
+    }
+
+    return ret;
+  }
+
   inline CVector Normalize() const {
     CVector ret;
     float length = std::hypot(x, y, z);

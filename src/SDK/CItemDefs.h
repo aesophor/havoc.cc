@@ -281,6 +281,10 @@ inline bool IsPistol(const CItemDef def) {
   }
 }
 
+inline bool IsRevolver(const CItemDef def) {
+  return def == WEAPON_REVOLVER;
+}
+
 inline bool IsAutomatic(const CItemDef def) {
   switch (def) {
     case WEAPON_AK47:
