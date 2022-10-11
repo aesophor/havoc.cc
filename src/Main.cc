@@ -4,6 +4,7 @@
 #include "GUI/GUI.h"
 #include "Hacks/Aimbot.h"
 #include "Hacks/AntiAim.h"
+#include "Hacks/AutoStrafe.h"
 #include "Hacks/AutoWall.h"
 #include "Hacks/Bhop.h"
 #include "Hacks/Chams.h"
@@ -17,6 +18,7 @@ void __attribute__((constructor)) OnDylibLoad() {
 
   hacks::aimbot::Init();
   hacks::antiaim::Init();
+  hacks::autostrafe::Init();
   hacks::autowall::Init();
   hacks::bhop::Init();
   hacks::chams::Init();

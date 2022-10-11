@@ -9,6 +9,7 @@
 #include "Core/Interfaces.h"
 #include "Hacks/Aimbot.h"
 #include "Hacks/AntiAim.h"
+#include "Hacks/AutoStrafe.h"
 #include "Hacks/AutoWall.h"
 #include "Hacks/Bhop.h"
 #include "Hacks/Chams.h"
@@ -100,7 +101,8 @@ void Render(SDL_Window *window) {
     if (ImGui::CollapsingHeader("Bunny Hop")) {
       ImGui::Checkbox("Enabled##bhop", &hacks::bhop::isEnabled);
       ImGui::BeginDisabled(!hacks::bhop::isEnabled);
-      ImGui::Checkbox("Strafe##bhop", &hacks::bhop::shouldStrafe);
+      ImGui::Checkbox("Auto strafe##bhop", &hacks::autostrafe::isEnabled);
+      ImGui::SliderInt("auto strafe type##bhop", &(int &) hacks::autostrafe::autoStrafeType, 0, 4);
       ImGui::EndDisabled();
     }
     if (ImGui::CollapsingHeader("Skins")) {

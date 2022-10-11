@@ -7,7 +7,6 @@
 namespace hacks::bhop {
 
 inline bool isEnabled = false;
-inline bool shouldStrafe = false;
 
 bool Init();
 void Run(CUserCmd *cmd);

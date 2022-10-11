@@ -25,6 +25,7 @@ add_library(
 	src/Hacks/Skins.cc
 	src/Hacks/Aimbot.cc
   src/Hacks/AntiAim.cc
+  src/Hacks/AutoStrafe.cc
   src/Hacks/AutoWall.cc
   src/Hacks/Chams.cc
 	src/Hacks/Bhop.cc
@@ -32,6 +33,7 @@ add_library(
 	src/GUI/SDL.cc
 	src/GUI/GUI.cc
 	src/SDK/CEntity.cc
+  src/Util/Math.cc
 	src/Main.cc
 
 	thirdparty/imgui/imgui.cpp

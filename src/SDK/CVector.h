@@ -46,6 +46,10 @@ struct CVector {
     return *this != CVector{};
   }
 
+  constexpr float Length() const {
+    return std::hypot(x, y, z);
+  }
+
   constexpr CVector Scale(const float factor) const {
     return {x * factor, y * factor, z * factor};
   }

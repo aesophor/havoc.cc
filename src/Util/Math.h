@@ -5,6 +5,9 @@
 #include <cmath>
 #include <numbers>
 
+class CUserCmd;
+class CVector;
+
 inline void SinCos(float radians, float &sin, float &cos) {
   double sinReg, cosReg;
   __asm ("fsincos" : "=t" (cosReg), "=u" (sinReg) : "0" (radians));
@@ -19,5 +22,7 @@ constexpr float Deg2Rad(const float deg) {
 constexpr float Rad2Deg(const float rad) {
   return 180.0f * rad / std::numbers::pi_v<float>;
 }
+
+void CorrectMovement(const CVector &oldAngles, CUserCmd *cmd, float oldForward, float oldSidemove);
 
 #endif  // HAVOC_MATH_H_

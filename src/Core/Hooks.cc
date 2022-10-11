@@ -13,6 +13,7 @@
 #include "Core/Interfaces.h"
 #include "Hacks/Aimbot.h"
 #include "Hacks/AntiAim.h"
+#include "Hacks/AutoStrafe.h"
 #include "Hacks/Bhop.h"
 #include "Hacks/Chams.h"
 #include "Hacks/Glow.h"
@@ -60,6 +61,7 @@ bool CreateMove(IClientMode *thisptr, float frameTime, CUserCmd *cmd) {
     hacks::bhop::Run(cmd);
     hacks::aimbot::Run(cmd);
     hacks::antiaim::Run(cmd);
+    hacks::autostrafe::Run(cmd);
   }
 
   if (createMoveShouldSendPacket) {
