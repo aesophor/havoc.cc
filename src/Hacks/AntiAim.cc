@@ -3,6 +3,7 @@
 
 #include <cmath>
 
+#include "Settings.h"
 #include "Core/Hooks.h"
 #include "Core/Interfaces.h"
 #include "Hacks/Aimbot.h"
@@ -23,7 +24,7 @@ bool GetBestHeadAngle(CVector& angle) {
   auto localPlayer = CLocalPlayer::The();
 
   const CVector src = localPlayer->GetEyePosition();
-  const float radius = hacks::antiaim::headEdgeDistance + 0.1f;
+  const float radius = settings::antiaim::headEdgeDistance + 0.1f;
   const float step = std::numbers::pi_v<float> * 2.0 / 8;
   float closestDistance = 100.f;
 
@@ -49,21 +50,21 @@ bool GetBestHeadAngle(CVector& angle) {
     }
   }
 
-  return closestDistance < hacks::antiaim::headEdgeDistance;
+  return closestDistance < settings::antiaim::headEdgeDistance;
 }
 
 void DoAntiAimY(CBasePlayer *localPlayer, CVector &angle, bool shouldSend) {
-  AntiAimTypeY type = shouldSend ? hacks::antiaim::yawTypeFake : hacks::antiaim::yawType;
+  AntiAimTypeY type = shouldSend ? settings::antiaim::fakeYawType : settings::antiaim::realYawType;
 
   float maxDelta = GetMaxDelta(localPlayer->GetAnimState());
   static bool shouldFlip = false;
 
   switch (type) {
     case AntiAimTypeY::MAX_DELTA_LEFT:
-      angle.y = hacks::antiaim::fakeAngle.y - maxDelta;
+      angle.y = settings::antiaim::fakeAngle.y - maxDelta;
       break;
     case AntiAimTypeY::MAX_DELTA_RIGHT:
-      angle.y = hacks::antiaim::fakeAngle.y + maxDelta;
+      angle.y = settings::antiaim::fakeAngle.y + maxDelta;
       break;
     case AntiAimTypeY::MAX_DELTA_FLIPPER:
       shouldFlip = !shouldFlip;
@@ -76,16 +77,16 @@ void DoAntiAimY(CBasePlayer *localPlayer, CVector &angle, bool shouldSend) {
   }
 
   if (shouldSend) {
-    hacks::antiaim::fakeAngle.y = angle.y;
+    settings::antiaim::fakeAngle.y = angle.y;
   } else {
-    hacks::antiaim::realAngle.y = angle.y;
+    settings::antiaim::realAngle.y = angle.y;
   }
 }
 
 void DoAntiAimX(CVector &angle) {
   static float dance = 0.f;
 
-  switch (hacks::antiaim::pitchType) {
+  switch (settings::antiaim::pitchType) {
     case AntiAimTypeX::STATIC_UP:
       angle.x = -89.f;
       break;
@@ -142,8 +143,8 @@ bool Init() {
   return true;
 }
 
-void Run(CUserCmd* cmd) {
-  if (!hacks::antiaim::isEnabled) {
+void CreateMove(CUserCmd* cmd) {
+  if (!settings::antiaim::isEnabled) {
     return;
   }
 
@@ -152,7 +153,7 @@ void Run(CUserCmd* cmd) {
   float oldForward = cmd->forwardMove;
   float oldSideMove = cmd->sideMove;
 
-  hacks::antiaim::realAngle = hacks::antiaim::fakeAngle = hooks::createMoveLastTickViewAngles;
+  settings::antiaim::realAngle = settings::antiaim::fakeAngle = hooks::createMoveLastTickViewAngles;
 
   CVector angle = cmd->viewAngles;
 
@@ -176,7 +177,7 @@ void Run(CUserCmd* cmd) {
   }
 
   CVector edgeAngle = angle;
-  bool edgingHead = hacks::antiaim::isHeadEdgeEnabled && GetBestHeadAngle(edgeAngle);
+  bool edgingHead = settings::antiaim::isHeadEdgeEnabled && GetBestHeadAngle(edgeAngle);
 
   static bool shouldSend = true;
   shouldSend = !shouldSend;
@@ -189,7 +190,7 @@ void Run(CUserCmd* cmd) {
   const CVector velocity = localPlayer->GetVelocity();
   float vel2D = std::hypot(velocity.x, velocity.y);
 
-  if (hacks::antiaim::isLBYBreakerEnabled) {
+  if (settings::antiaim::isLBYBreakerEnabled) {
     if (vel2D >= 0.1f ||
         !(localPlayer->GetFlags() & CEntity::FL_ONGROUND) ||
         localPlayer->GetFlags() & CEntity::FL_FROZEN) {
@@ -197,12 +198,12 @@ void Run(CUserCmd* cmd) {
       lastCheck = GetCurrentTimestampMs();
     } else {
       if (!lbyBreak && GetCurrentTimestampMs() - lastCheck > 22) {
-        angle.y -= hacks::antiaim::lbyBreakerOffset;
+        angle.y -= settings::antiaim::lbyBreakerOffset;
         lbyBreak = true;
         lastCheck = GetCurrentTimestampMs();
         needToFlick = true;
       } else if (lbyBreak && GetCurrentTimestampMs() - lastCheck > 110) {
-        angle.y -= hacks::antiaim::lbyBreakerOffset;
+        angle.y -= settings::antiaim::lbyBreakerOffset;
         lbyBreak = true;
         lastCheck = GetCurrentTimestampMs();
         needToFlick = true;
@@ -210,16 +211,16 @@ void Run(CUserCmd* cmd) {
     }
   }
 
-  if (hacks::antiaim::isYawEnabled && !needToFlick) {
+  if (settings::antiaim::isYawEnabled && !needToFlick) {
     DoAntiAimY(localPlayer, angle, shouldSend);
 
     hooks::createMoveShouldSendPacket = shouldSend;
-    if (hacks::antiaim::isHeadEdgeEnabled && edgingHead && !shouldSend) {
+    if (settings::antiaim::isHeadEdgeEnabled && edgingHead && !shouldSend) {
       angle.y = edgeAngle.y;
     }
   }
 
-  if (hacks::antiaim::isPitchEnabled) {
+  if (settings::antiaim::isPitchEnabled) {
     DoAntiAimX(angle);
   }
 

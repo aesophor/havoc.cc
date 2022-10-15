@@ -21,8 +21,6 @@ struct FireBulletData {
   int penetrateCount;
 };
 
-inline bool isEnabled = true;
-
 bool Init();
 float GetDamage(const CVector &dest, bool teamCheck, FireBulletData &fData);
 

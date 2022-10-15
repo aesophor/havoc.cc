@@ -223,7 +223,7 @@ class CLocalPlayer : public CBasePlayer {
  public:
   static CLocalPlayer *The();
 
-  std::vector<CBasePlayer *> GetAllOtherPlayers();
+  std::vector<std::pair<int, CBasePlayer *>> GetAllOtherPlayers();
 };
 
 class CBasePlantedC4 : public CEntity {
@@ -252,6 +252,7 @@ class CBaseAttributableItem : public CEntity {
   bool IsKnife() { return ::IsKnife(GetItemDefinitionIndex()); }
   bool IsGrenade() { return ::IsGrenade(GetItemDefinitionIndex()); }
   bool IsBomb() { return ::IsBomb(GetItemDefinitionIndex()); }
+  bool isAWPorSSG() { return ::IsAWPorSSG(GetItemDefinitionIndex()); }
   bool CanScope() { return ::CanScope(GetItemDefinitionIndex()); }
 };
 

@@ -13,7 +13,7 @@ struct KnifeModel {
   const CItemDef itemDef;
 };
 
-inline constexpr KnifeModel knifeModels[] = {
+inline constexpr KnifeModel kKnifeModels[] = {
   {"Default knife",        "",                                             WEAPON_UNDEFINED},
   {"Default knife (CT)",   "models/weapons/v_knife_default_ct.mdl",        WEAPON_KNIFE},
   {"Default knife (T)",    "models/weapons/v_knife_default_t.mdl",         WEAPON_KNIFE_T},
@@ -29,11 +29,10 @@ inline constexpr KnifeModel knifeModels[] = {
   {"Shadow daggers",       "models/weapons/v_knife_push.mdl",              WEAPON_KNIFE_PUSH},
 };
 
-inline constexpr int numKnifeModels = std::size(knifeModels);
-inline int knifeIdx = 0;
+inline constexpr int kNumKnifeModels = std::size(kKnifeModels);
 
 bool Init();
-void Run();
+void FrameStageNotify();
 void FixAnimations(CRecvProxyData *data, CBaseViewModel *viewModel, void *);
 
 }  // namespace hacks::skins

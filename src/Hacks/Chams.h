@@ -7,8 +7,6 @@
 
 namespace hacks::chams {
 
-inline bool isEnabled = false;
-
 bool Init();
 void DrawModel(IStudioRender *thisptr, void *results, const CDrawModelInfo &info,
                CMatrix3x4 *bones, float *flexWeights, float *flexDelayedWeights,

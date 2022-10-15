@@ -47,17 +47,17 @@ CLocalPlayer *CLocalPlayer::The() {
   return interfaces::entityList->GetEntityFromIndex<CLocalPlayer>(idx);
 }
 
-std::vector<CBasePlayer *> CLocalPlayer::GetAllOtherPlayers() {
+std::vector<std::pair<int, CBasePlayer *>> CLocalPlayer::GetAllOtherPlayers() {
   auto localPlayer = CLocalPlayer::The();
   size_t maxClients = interfaces::engine->GetMaxClients();
 
-  std::vector<CBasePlayer *> ret;
+  std::vector<std::pair<int, CBasePlayer *>> ret;
   ret.reserve(maxClients);
 
   for (size_t i = 0; i < maxClients; i++) {
     auto player = interfaces::entityList->GetEntityFromIndex<CBasePlayer>(i);
     if (player && player != localPlayer) {
-      ret.push_back(player);
+      ret.push_back(std::make_pair(i, player));
     }
   }
   return ret;

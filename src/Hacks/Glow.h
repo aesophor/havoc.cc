@@ -8,10 +8,6 @@
 
 namespace hacks::glow {
 
-inline bool isEnabled = false;
-inline bool shouldShowTeammates = false;
-inline float userAlpha = 0.35f;
-
 bool Init();
 bool GlowEffectSpectator(CBasePlayer *player, CLocalPlayer *localPlayer, GlowRenderStyle &glowStyle,
                          CVector &glowColor, float &alphaStart, float &alpha, float &timeStart,

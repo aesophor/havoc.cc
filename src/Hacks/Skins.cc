@@ -1,6 +1,7 @@
 // Copyright (c) 2022 Marco Wang <m.aesophor@gmail.com>. All rights reserved.
 #include "Skins.h"
 
+#include "Settings.h"
 #include "Core/Hooks.h"
 #include "Core/Interfaces.h"
 #include "SDK/CEntity.h"
@@ -41,7 +42,7 @@ bool Init() {
   return true;
 }
 
-void Run() {
+void FrameStageNotify() {
   auto localPlayer = CLocalPlayer::The();
 
   if (!localPlayer) {
@@ -52,12 +53,12 @@ void Run() {
     auto weapon
       = interfaces::entityList->GetEntityFromHandle<CBaseAttributableItem>(handle);
 
-    if (!weapon || knifeIdx == 0) {
+    if (!weapon || settings::skins::knifeIdx == 0) {
       continue;
     }
 
     if (weapon->IsKnife()) {
-      weapon->GetItemDefinitionIndex() = knifeModels[knifeIdx].itemDef;
+      weapon->GetItemDefinitionIndex() = kKnifeModels[settings::skins::knifeIdx].itemDef;
       weapon->GetFallbackWear() = 0.0001f;
       weapon->GetEntityQuality() = 3;
       weapon->GetItemIDHigh() = -1;
@@ -82,7 +83,7 @@ void Run() {
 
   if (activeWeapon->IsKnife()) {
     viewModel->GetModelIndex()
-        = interfaces::modelInfo->GetModelIndex(knifeModels[knifeIdx].modelPath);
+        = interfaces::modelInfo->GetModelIndex(kKnifeModels[settings::skins::knifeIdx].modelPath);
   }
 }
 

@@ -1,6 +1,7 @@
 // Copyright (c) 2022 Marco Wang <m.aesophor@gmail.com>. All rights reserved.
 #include "Glow.h"
 
+#include "Settings.h"
 #include "Core/Hooks.h"
 #include "Core/Interfaces.h"
 #include "SDK/CEntity.h"
@@ -29,14 +30,14 @@ bool GlowEffectSpectator(CBasePlayer *player, CLocalPlayer *localPlayer, GlowRen
     return false;
   }
 
-  if (!isEnabled || (!shouldShowTeammates && !player->IsEnemy())) {
+  if (!settings::glow::isEnabled || (!settings::glow::shouldShowTeammates && !player->IsEnemy())) {
     alpha = 0.f;
     return false;
   }
 
   glowStyle = GlowRenderStyle::DEFAULT;
   glowColor = {242.0f / 255.0f, 117.0f / 255.0f, 117.0f / 255.0f};
-  alpha = userAlpha;
+  alpha = settings::glow::userAlpha;
   return true;
 }
 

@@ -1,6 +1,7 @@
 // Copyright (c) 2022 Marco Wang <m.aesophor@gmail.com>. All rights reserved.
 #include "AutoStrafe.h"
 
+#include "Settings.h"
 #include "Core/Interfaces.h"
 #include "SDK/CEntity.h"
 #include "Util/Math.h"
@@ -27,7 +28,7 @@ void RunLegit(CUserCmd* cmd) {
     return;
   }
 
-  switch (hacks::autostrafe::autoStrafeType) {
+  switch (settings::autostrafe::autoStrafeType) {
     case AutoStrafeType::FORWARDS:
       cmd->sideMove = cmd->mouseDx < 0.f ? -250.f : 250.f;
       break;
@@ -102,8 +103,8 @@ bool Init() {
   return true;
 }
 
-void Run(CUserCmd *cmd) {
-  if (!isEnabled) {
+void CreateMove(CUserCmd *cmd) {
+  if (!settings::autostrafe::isEnabled) {
     return;
   }
 
@@ -113,7 +114,7 @@ void Run(CUserCmd *cmd) {
     return;
   }
 
-  switch (hacks::autostrafe::autoStrafeType) {
+  switch (settings::autostrafe::autoStrafeType) {
     case AutoStrafeType::FORWARDS:
     case AutoStrafeType::BACKWARDS:
     case AutoStrafeType::LEFT_SIDEWAYS:

@@ -14,7 +14,7 @@ class IEngineClient {
   }
 
   constexpr int32_t GetLocalPlayerIndex() {
-    return memory::CallVFunc<std::int32_t>(this, 12);
+    return memory::CallVFunc<int32_t>(this, 12);
   }
 
   constexpr void GetViewAngles(CVector &viewAngles) {
@@ -26,7 +26,7 @@ class IEngineClient {
   }
 
   constexpr int32_t GetMaxClients() {
-    return memory::CallVFunc<int>(this, 20);
+    return memory::CallVFunc<int32_t>(this, 20);
   }
 
   constexpr bool IsInGame() {

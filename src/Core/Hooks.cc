@@ -58,10 +58,10 @@ bool CreateMove(IClientMode *thisptr, float frameTime, CUserCmd *cmd) {
   auto localPlayer = CLocalPlayer::The();
 
   if (localPlayer && localPlayer->IsAlive()) {
-    hacks::bhop::Run(cmd);
-    hacks::aimbot::Run(cmd);
-    hacks::antiaim::Run(cmd);
-    hacks::autostrafe::Run(cmd);
+    hacks::bhop::CreateMove(cmd);
+    hacks::aimbot::CreateMove(cmd);
+    hacks::antiaim::CreateMove(cmd);
+    hacks::autostrafe::CreateMove(cmd);
   }
 
   if (createMoveShouldSendPacket) {
@@ -79,7 +79,7 @@ bool CreateMove(IClientMode *thisptr, float frameTime, CUserCmd *cmd) {
 
 void FrameStageNotify(IBaseClientDLL *thisptr, ClientFrameStage stage) {
   if (stage == ClientFrameStage::NET_UPDATE_POSTDATAUPDATE_START) {
-    hacks::skins::Run();
+    hacks::skins::FrameStageNotify();
   }
 
   originalFrameStageNotify(interfaces::client, stage);

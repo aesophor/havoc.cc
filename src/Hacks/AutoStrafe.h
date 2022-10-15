@@ -14,11 +14,8 @@ enum class AutoStrafeType : int {
   RAGE,
 };
 
-inline bool isEnabled = false;
-inline AutoStrafeType autoStrafeType = AutoStrafeType::RAGE;
-
 bool Init();
-void Run(CUserCmd *cmd);
+void CreateMove(CUserCmd *cmd);
 
 }  // namespace hacks::autostrafe
 

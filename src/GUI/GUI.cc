@@ -5,6 +5,7 @@
 #include <imgui/backends/imgui_impl_opengl2.h>
 #include <imgui/backends/imgui_impl_sdl.h>
 
+#include "Settings.h"
 #include "Core/Hooks.h"
 #include "Core/Interfaces.h"
 #include "Hacks/Aimbot.h"
@@ -17,7 +18,9 @@
 #include "Hacks/Skins.h"
 
 namespace {
+
 SDL_GLContext havocGlCtx = nullptr;
+
 }  // namespace
 
 namespace gui {
@@ -64,56 +67,58 @@ void Render(SDL_Window *window) {
   ImGui::NewFrame();
 
   if (ImGui::Begin("havoc.cc")) {
+    if (ImGui::CollapsingHeader("Global")) {
+      ImGui::Checkbox("Set local viewangles##global", &hooks::shouldSetLocal);
+    }
     if (ImGui::CollapsingHeader("Aimbot")) {
-      ImGui::Checkbox("Enabled##aimbot", &hacks::aimbot::isEnabled);
-      ImGui::BeginDisabled(!hacks::aimbot::isEnabled);
-      ImGui::Checkbox("Rage##aimbot", &hacks::aimbot::shouldRage);
-      ImGui::Checkbox("Automatic fire##aimbot", &hacks::aimbot::shouldAutoFire);
-      ImGui::SliderInt("Fire delay (ms)##aimbot", &hacks::aimbot::fireDelayMs, 0, 1000);
-      ImGui::Checkbox("Automatic scope##aimbot", &hacks::aimbot::shouldAutoScope);
-      ImGui::Checkbox("Autowall##aimbot", &hacks::autowall::isEnabled);
-      ImGui::Checkbox("Shoot teammates##aimbot", &hacks::aimbot::shouldShootTeammates);
-      ImGui::SliderFloat("Hit chance##aimbot", &hacks::aimbot::hitChance, 0.0f, 1.0f);
+      ImGui::Checkbox("Enabled##aimbot", &settings::aimbot::isEnabled);
+      ImGui::BeginDisabled(!settings::aimbot::isEnabled);
+      ImGui::Checkbox("Rage##aimbot", &settings::aimbot::shouldRage);
+      ImGui::Checkbox("Automatic fire##aimbot", &settings::aimbot::shouldAutoFire);
+      ImGui::SliderInt("Fire delay (ms)##aimbot", &settings::aimbot::fireDelayMs, 0, 1000);
+      ImGui::Checkbox("Automatic scope##aimbot", &settings::aimbot::shouldAutoScope);
+      ImGui::Checkbox("Autowall##aimbot", &settings::autowall::isEnabled);
+      ImGui::Checkbox("Shoot teammates##aimbot", &settings::aimbot::shouldShootTeammates);
+      ImGui::Checkbox("AWP and SSG only##aimbot", &settings::aimbot::shouldOnlyAllowAWPandSSG);
+      ImGui::SliderFloat("Hit chance##aimbot", &settings::aimbot::hitChance, 0.0f, 1.0f);
       ImGui::EndDisabled();
     }
     if (ImGui::CollapsingHeader("AntiAim")) {
-      ImGui::Checkbox("Enabled##antiaim", &hacks::antiaim::isEnabled);
-      ImGui::BeginDisabled(!hacks::antiaim::isEnabled);
-      ImGui::Checkbox("Set local viewangles##antiaim", &hooks::shouldSetLocal);
-      ImGui::Checkbox("Yaw##antiaim", &hacks::antiaim::isYawEnabled);
-      ImGui::Checkbox("Pitch##antiaim", &hacks::antiaim::isPitchEnabled);
-      ImGui::Checkbox("Head edge##antiaim", &hacks::antiaim::isHeadEdgeEnabled);
-      ImGui::Checkbox("LBT breaker##antiaim", &hacks::antiaim::isLBYBreakerEnabled);
-      ImGui::SliderInt("yawType##antiaim", &(int &) hacks::antiaim::yawType, 0, 4);
-      ImGui::SliderInt("pitchType##antiaim", &(int &) hacks::antiaim::pitchType, 0, 3);
+      ImGui::Checkbox("Enabled##antiaim", &settings::antiaim::isEnabled);
+      ImGui::BeginDisabled(!settings::antiaim::isEnabled);
+      ImGui::Checkbox("Yaw##antiaim", &settings::antiaim::isYawEnabled);
+      ImGui::Checkbox("Pitch##antiaim", &settings::antiaim::isPitchEnabled);
+      ImGui::Checkbox("Head edge##antiaim", &settings::antiaim::isHeadEdgeEnabled);
+      ImGui::Checkbox("LBT breaker##antiaim", &settings::antiaim::isLBYBreakerEnabled);
+      ImGui::SliderInt("Real Yaw Type##antiaim", &(int &) settings::antiaim::realYawType, 0, 4);
+      ImGui::SliderInt("Fake Yaw Type##antiaim", &(int &) settings::antiaim::fakeYawType, 0, 4);
+      ImGui::SliderInt("Pitch Type##antiaim", &(int &) settings::antiaim::pitchType, 0, 3);
       ImGui::EndDisabled();
     }
     if (ImGui::CollapsingHeader("Chams")) {
-      ImGui::Checkbox("Enabled##chams", &hacks::chams::isEnabled);
+      ImGui::Checkbox("Enabled##chams", &settings::chams::isEnabled);
     }
     if (ImGui::CollapsingHeader("Glow")) {
-      ImGui::Checkbox("Enabled##glow", &hacks::glow::isEnabled);
-      ImGui::BeginDisabled(!hacks::glow::isEnabled);
-      ImGui::Checkbox("Show teammates##glow", &hacks::glow::shouldShowTeammates);
-      ImGui::SliderFloat("Alpha##glow", &hacks::glow::userAlpha, 0.0f, 1.0f);
+      ImGui::Checkbox("Enabled##glow", &settings::glow::isEnabled);
+      ImGui::BeginDisabled(!settings::glow::isEnabled);
+      ImGui::Checkbox("Show teammates##glow", &settings::glow::shouldShowTeammates);
+      ImGui::SliderFloat("Alpha##glow", &settings::glow::userAlpha, 0.0f, 1.0f);
       ImGui::EndDisabled();
     }
     if (ImGui::CollapsingHeader("Bunny Hop")) {
-      ImGui::Checkbox("Enabled##bhop", &hacks::bhop::isEnabled);
-      ImGui::BeginDisabled(!hacks::bhop::isEnabled);
-      ImGui::Checkbox("Auto strafe##bhop", &hacks::autostrafe::isEnabled);
-      ImGui::SliderInt("auto strafe type##bhop", &(int &) hacks::autostrafe::autoStrafeType, 0, 4);
+      ImGui::Checkbox("Enabled##bhop", &settings::bhop::isEnabled);
+      ImGui::BeginDisabled(!settings::bhop::isEnabled);
+      ImGui::Checkbox("Auto strafe##bhop", &settings::autostrafe::isEnabled);
+      ImGui::SliderInt("auto strafe type##bhop", &(int &) settings::autostrafe::autoStrafeType, 0, 4);
       ImGui::EndDisabled();
     }
     if (ImGui::CollapsingHeader("Skins")) {
       ImGui::Text("Knife model");
-      const auto &knifeModels = hacks::skins::knifeModels;
-
-      if (ImGui::BeginCombo("##skins", knifeModels[hacks::skins::knifeIdx].name)) {
-        for (int i = 0; i < hacks::skins::numKnifeModels; i++) {
-          const bool isSelected = i == hacks::skins::knifeIdx;
-          if (ImGui::Selectable(knifeModels[i].name, isSelected)) {
-            hacks::skins::knifeIdx = i;
+      if (ImGui::BeginCombo("##skins", hacks::skins::kKnifeModels[settings::skins::knifeIdx].name)) {
+        for (int i = 0; i < hacks::skins::kNumKnifeModels; i++) {
+          const bool isSelected = i == settings::skins::knifeIdx;
+          if (ImGui::Selectable(hacks::skins::kKnifeModels[i].name, isSelected)) {
+            settings::skins::knifeIdx = i;
           }
           if (isSelected) {
             ImGui::SetItemDefaultFocus();

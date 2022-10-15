@@ -358,6 +358,10 @@ inline bool IsBomb(const CItemDef def) {
   return def == WEAPON_C4;
 }
 
+inline bool IsAWPorSSG(const CItemDef def) {
+  return def == WEAPON_AWP || def == WEAPON_SSG08;
+}
+
 inline bool CanScope(const CItemDef def) {
   switch (def) {
     case WEAPON_AUG:

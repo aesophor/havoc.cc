@@ -1,6 +1,7 @@
 // Copyright (c) 2022 Marco Wang <m.aesophor@gmail.com>. All rights reserved.
 #include "Chams.h"
 
+#include "Settings.h"
 #include "Core/Hooks.h"
 #include "Core/Interfaces.h"
 #include "SDK/CEntity.h"
@@ -9,7 +10,9 @@
 namespace hacks::chams {
 
 namespace {
+
 IMaterial *material = nullptr;
+
 }  // namespace
 
 bool Init() {
@@ -28,7 +31,7 @@ bool Init() {
 void DrawModel(IStudioRender *thisptr, void *results, const CDrawModelInfo &info,
                CMatrix3x4 *bones, float *flexWeights, float *flexDelayedWeights,
                const CVector &modelOrigin, const int flags) {
-  if (!isEnabled) {
+  if (!settings::chams::isEnabled) {
     hooks::originalDrawModel(thisptr, results, info, bones,
                              flexWeights, flexDelayedWeights, modelOrigin, flags);
     return;
@@ -37,8 +40,8 @@ void DrawModel(IStudioRender *thisptr, void *results, const CDrawModelInfo &info
   auto localPlayer = CLocalPlayer::The();
 
   if (localPlayer && info.renderable) {
-    constexpr float kHidden[3] = {0.f, 1.f, 1.f};
-    constexpr float kVisible[3] = {1.f, 1.f, 0.f};
+    constexpr float kHidden[3] = {0.144f, 0.156f, 0.21f};
+    constexpr float kVisible[3] = {0.46f, 0.61f, 0.98f};
 
     // Alpha modulate
     interfaces::studioRender->SetAlphaModulation(1.f);

@@ -1,6 +1,7 @@
 // Copyright (c) 2022 Marco Wang <m.aesophor@gmail.com>. All rights reserved.
 #include "Aimbot.h"
 
+#include "Settings.h"
 #include "Core/Hooks.h"
 #include "Core/Interfaces.h"
 #include "Hacks/AutoWall.h"
@@ -52,27 +53,31 @@ void RunLegit(CUserCmd *cmd) {
     return;
   }
 
+  if (settings::aimbot::shouldOnlyAllowAWPandSSG && !activeWeapon->isAWPorSSG()) {
+    return;
+  }
+
   CBasePlayer *target = nullptr;
   CVector bestAngle = {};
   float bestFov = 5.f;
 
-  for (auto player : localPlayer->GetAllOtherPlayers()) {
+  for (auto [idx, player] : localPlayer->GetAllOtherPlayers()) {
     if (player->IsDormant() || player->IsImmune() || !player->IsAlive()) {
       continue;
     }
 
-    if (!shouldShootTeammates && !player->IsEnemy()) {
+    if (!settings::aimbot::shouldShootTeammates && !player->IsEnemy()) {
       continue;
     }
 
-    if (!hacks::autowall::isEnabled && !player->IsVisible()) {
+    if (!settings::autowall::isEnabled && !player->IsVisible()) {
       continue;
     }
 
     float damage = 0.f;
     Bone bone = Bone::HEAD;
 
-    if (hacks::autowall::isEnabled) {
+    if (settings::autowall::isEnabled) {
       GetBestBone(player, damage, bone);
       if (damage == 0.f) {
         continue;
@@ -92,20 +97,20 @@ void RunLegit(CUserCmd *cmd) {
     }
   }
 
-  cmd->viewAngles += bestAngle.Scale(hitChance);
+  cmd->viewAngles += bestAngle.Scale(settings::aimbot::hitChance);
 
-  if (shouldAutoScope &&
+  if (settings::aimbot::shouldAutoScope &&
       target &&
       activeWeapon->CanScope() &&
       !localPlayer->IsScoped()) {
     cmd->buttons |= CUserCmd::IN_SECOND_ATTACK;
-  } else if (shouldAutoFire && target) {
+  } else if (settings::aimbot::shouldAutoFire && target) {
     uint64_t timestamp = GetCurrentTimestampMs();
 
-    if (timestamp - lastFiredTimestamp >= nextFireDelayMs) {
+    if (timestamp - lastFiredTimestamp >= settings::aimbot::nextFireDelayMs) {
       cmd->buttons |= CUserCmd::IN_ATTACK;
       lastFiredTimestamp = timestamp;
-      nextFireDelayMs = fireDelayMs + RandomInt(-25, 25);
+      settings::aimbot::nextFireDelayMs = settings::aimbot::fireDelayMs + RandomInt(-25, 25);
     }
   }
 }
@@ -131,19 +136,19 @@ void RunRage(CUserCmd *cmd) {
   float bestDamage = 0.f;
   Bone bestBone = Bone::HEAD;
 
-  for (auto player : localPlayer->GetAllOtherPlayers()) {
+  for (auto [idx, player] : localPlayer->GetAllOtherPlayers()) {
     if (player->IsDormant() || player->IsImmune() || !player->IsAlive()) {
       continue;
     }
 
-    if (!shouldShootTeammates && !player->IsEnemy()) {
+    if (!settings::aimbot::shouldShootTeammates && !player->IsEnemy()) {
       continue;
     }
 
     float damage = 0.f;
     Bone bone = Bone::HEAD;
 
-    if (!hacks::autowall::isEnabled) {
+    if (!settings::autowall::isEnabled) {
       if (!player->IsVisible()) {
         continue;
       }
@@ -158,15 +163,15 @@ void RunRage(CUserCmd *cmd) {
     }
   }
 
-  if (shouldAutoScope &&
+  if (settings::aimbot::shouldAutoScope &&
       target &&
       activeWeapon->CanScope() &&
       !localPlayer->IsScoped()) {
     cmd->buttons |= CUserCmd::IN_SECOND_ATTACK;
-  } else if (shouldAutoFire && target) {
+  } else if (settings::aimbot::shouldAutoFire && target) {
     uint64_t timestamp = GetCurrentTimestampMs();
 
-    if (timestamp - lastFiredTimestamp >= nextFireDelayMs) {
+    if (timestamp - lastFiredTimestamp >= settings::aimbot::nextFireDelayMs) {
       CVector localEyePosition = localPlayer->GetEyePosition();
       CVector enemyHeadPosition = target->GetBonePosition(bestBone);
       CVector aimPunch = localPlayer->GetAimPunchAngle();
@@ -177,7 +182,7 @@ void RunRage(CUserCmd *cmd) {
       cmd->buttons |= CUserCmd::IN_ATTACK;
 
       lastFiredTimestamp = timestamp;
-      nextFireDelayMs = fireDelayMs + RandomInt(-25, 25);
+      settings::aimbot::nextFireDelayMs = settings::aimbot::fireDelayMs + RandomInt(-25, 25);
     }
   }
 }
@@ -194,12 +199,16 @@ bool Init() {
   return true;
 }
 
-void Run(CUserCmd *cmd) {
-  if (!isEnabled) {
+void CreateMove(CUserCmd *cmd) {
+  if (!settings::aimbot::isEnabled) {
     return;
   }
 
-  shouldRage ? RunRage(cmd) : RunLegit(cmd);
+  if (settings::aimbot::shouldRage) {
+    RunRage(cmd);
+  } else {
+    RunLegit(cmd);
+  }
 }
 
 }  // namespace hacks::aimbot

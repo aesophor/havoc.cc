@@ -6,10 +6,8 @@
 
 namespace hacks::bhop {
 
-inline bool isEnabled = false;
-
 bool Init();
-void Run(CUserCmd *cmd);
+void CreateMove(CUserCmd *cmd);
 
 }  // namespace hacks::bhop
 

@@ -4,7 +4,6 @@
 
 #include "SDK/CCSGOAnimState.h"
 #include "SDK/CUserCmd.h"
-#include "SDK/CVector.h"
 
 namespace hacks::antiaim {
 
@@ -23,25 +22,8 @@ enum class AntiAimTypeX : int {
   DANCE,
 };
 
-inline bool isEnabled = false;
-
-inline bool isYawEnabled = true;
-inline bool isPitchEnabled = true;
-inline AntiAimTypeY yawType = AntiAimTypeY::MAX_DELTA_FLIPPER;
-inline AntiAimTypeY yawTypeFake = AntiAimTypeY::NONE;
-inline AntiAimTypeX pitchType = AntiAimTypeX::STATIC_DOWN;
-
-inline bool isHeadEdgeEnabled = false;
-inline float headEdgeDistance = 25.f;
-
-inline bool isLBYBreakerEnabled = false;
-inline float lbyBreakerOffset = 180.f;
-
-inline CVector realAngle{};
-inline CVector fakeAngle{};
-
 bool Init();
-void Run(CUserCmd *cmd);
+void CreateMove(CUserCmd *cmd);
 float GetMaxDelta(CCSGOAnimState *animState);
 
 }  // namespace hacks::antiaim
