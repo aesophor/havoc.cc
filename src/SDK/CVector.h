@@ -22,7 +22,8 @@
   }
 
 struct CVector {
-  float x{}, y{}, z{};
+  constexpr CVector() : x(), y(), z() {}
+  constexpr CVector(float x, float y, float z) : x(x), y(y), z(z) {}
 
   CVECTOR_DEF_OPERATOR_CONST(+)
   CVECTOR_DEF_OPERATOR_CONST(-)
@@ -128,14 +129,8 @@ struct CVector {
 
     return ret;
   }
-};
 
-struct __attribute__((aligned(16))) CVectorAligned : public CVector {
-  float w{};
-
-  constexpr CVectorAligned operator-(const CVectorAligned &other) const {
-    return {x - other.x, y - other.y, z - other.z, w - other.w};
-  }
+  float x, y, z;
 };
 
 #endif  // HAVOC_C_VECTOR_H_
