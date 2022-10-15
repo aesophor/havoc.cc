@@ -22,7 +22,6 @@ add_library(
 	src/Core/Hooks.cc
 	src/Core/Interfaces.cc
 	src/Core/NetVars.cc
-	src/Hacks/Skins.cc
 	src/Hacks/Aimbot.cc
   src/Hacks/AntiAim.cc
   src/Hacks/AutoStrafe.cc
@@ -30,6 +29,7 @@ add_library(
   src/Hacks/Chams.cc
 	src/Hacks/Bhop.cc
 	src/Hacks/Glow.cc
+	src/Hacks/Skins.cc
 	src/GUI/SDL.cc
 	src/GUI/GUI.cc
 	src/SDK/CEntity.cc
