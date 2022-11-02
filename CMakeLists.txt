@@ -16,32 +16,32 @@ include_directories("/usr/local/include")
 include_directories(${PROJECT_NAME} ${SDL2_INCLUDE_DIRS})
 
 add_library(
-	${PROJECT_NAME} SHARED
+  ${PROJECT_NAME} SHARED
 
-	src/Core/Dylib.cc
-	src/Core/Hooks.cc
-	src/Core/Interfaces.cc
-	src/Core/NetVars.cc
-	src/Hacks/Aimbot.cc
+  src/Core/Dylib.cc
+  src/Core/Hooks.cc
+  src/Core/Interfaces.cc
+  src/Core/NetVars.cc
+  src/Hacks/Aimbot.cc
   src/Hacks/AntiAim.cc
   src/Hacks/AutoStrafe.cc
   src/Hacks/AutoWall.cc
   src/Hacks/Chams.cc
-	src/Hacks/Bhop.cc
-	src/Hacks/Glow.cc
-	src/Hacks/Skins.cc
-	src/GUI/SDL.cc
-	src/GUI/GUI.cc
-	src/SDK/CEntity.cc
+  src/Hacks/Bhop.cc
+  src/Hacks/Glow.cc
+  src/Hacks/Skins.cc
+  src/GUI/SDL.cc
+  src/GUI/GUI.cc
+  src/SDK/CEntity.cc
   src/Util/Math.cc
-	src/Main.cc
+  src/Main.cc
 
-	thirdparty/imgui/imgui.cpp
-	thirdparty/imgui/imgui_draw.cpp
-	thirdparty/imgui/imgui_tables.cpp
-	thirdparty/imgui/imgui_widgets.cpp
-	thirdparty/imgui/backends/imgui_impl_sdl.cpp
-	thirdparty/imgui/backends/imgui_impl_opengl2.cpp
+  thirdparty/imgui/imgui.cpp
+  thirdparty/imgui/imgui_draw.cpp
+  thirdparty/imgui/imgui_tables.cpp
+  thirdparty/imgui/imgui_widgets.cpp
+  thirdparty/imgui/backends/imgui_impl_sdl.cpp
+  thirdparty/imgui/backends/imgui_impl_opengl2.cpp
 )
 
 target_link_libraries(${PROJECT_NAME} "-framework OpenGL")
