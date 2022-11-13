@@ -12,7 +12,7 @@ namespace hacks::glow {
 bool Init() {
   // The signature of GlowEffectSpectator().
   constexpr std::string_view kSig = "\x55\x48\x89\xe5\x41\x57\x41\x56\x41\x55\x41\x54\x53"
-                                    "\x48\x83\xec\x38\x48\x89\xcb\x49\x89\xf4";
+                                    "\x48\x83\xec\x38\x4c\x89\xc3\x49\x89\xf4";
 
   uintptr_t addr = interfaces::clientDylib->ScanSignature(kSig);
   if (!addr) {
