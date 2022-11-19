@@ -40,8 +40,8 @@ void DrawModel(IStudioRender *thisptr, void *results, const CDrawModelInfo &info
   auto localPlayer = CLocalPlayer::The();
 
   if (localPlayer && info.renderable) {
-    constexpr float kHidden[3] = {0.144f, 0.156f, 0.21f};
-    constexpr float kVisible[3] = {0.46f, 0.61f, 0.98f};
+    constexpr float kHidden[3] = {119.f / 256, 160.f / 256, 255.f / 256};
+    constexpr float kVisible[3] = {238.f / 256, 102.f / 256, 109.f / 256};
 
     // Alpha modulate
     interfaces::studioRender->SetAlphaModulation(1.f);
