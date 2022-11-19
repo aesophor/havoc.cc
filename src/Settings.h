@@ -10,13 +10,13 @@ namespace settings {
 
 namespace aimbot {
 
-inline bool isEnabled = false;
+inline bool isEnabled = true;
 inline bool shouldRage = false;
 inline bool shouldAutoFire = false;
 inline bool shouldAutoScope = false;
 inline bool shouldShootTeammates = false;
 inline bool shouldOnlyAllowAWPandSSG = true;
-inline float hitChance = 0.18f;
+inline float hitChance = 0.4f;
 inline int fireDelayMs = 50;
 inline int nextFireDelayMs = 50;
 
@@ -24,7 +24,7 @@ inline int nextFireDelayMs = 50;
 
 namespace autowall {
 
-inline bool isEnabled = true;
+inline bool isEnabled = false;
 
 } // namespace autowall
 
