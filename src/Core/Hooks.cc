@@ -59,9 +59,9 @@ bool CreateMove(IClientMode *thisptr, float frameTime, CUserCmd *cmd) {
 
   if (localPlayer && localPlayer->IsAlive()) {
     hacks::bhop::CreateMove(cmd);
-    hacks::aimbot::CreateMove(cmd);
     hacks::antiaim::CreateMove(cmd);
     hacks::autostrafe::CreateMove(cmd);
+    hacks::aimbot::CreateMove(cmd);
   }
 
   if (createMoveShouldSendPacket) {
