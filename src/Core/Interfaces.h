@@ -11,8 +11,10 @@
 #include "SDK/IClientMode.h"
 #include "SDK/IEngineClient.h"
 #include "SDK/IEngineTrace.h"
+#include "SDK/IGameMovement.h"
 #include "SDK/IMaterialSystem.h"
 #include "SDK/IModelInfo.h"
+#include "SDK/IPrediction.h"
 #include "SDK/IPhysicsSurfaceProps.h"
 #include "SDK/IStudioRender.h"
 
@@ -36,9 +38,11 @@ inline IClientEntityList *entityList = nullptr;
 inline IClientMode *clientMode = nullptr;
 inline IEngineClient *engine = nullptr;
 inline IEngineTrace *engineTrace = nullptr;
+inline IGameMovement *gameMovement = nullptr;
 inline IMaterialSystem *materialSystem = nullptr;
 inline IModelInfo *modelInfo = nullptr;
 inline IPhysicsSurfaceProps *physics = nullptr;
+inline IPrediction *prediction = nullptr;
 inline IStudioRender *studioRender = nullptr;
 
 inline CGlobalVars *globalVars = nullptr;

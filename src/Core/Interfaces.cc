@@ -41,9 +41,11 @@ void Init() {
   entityList = clientDylib->GetInterface<IClientEntityList>("VClientEntityList");
   engine = engineDylib->GetInterface<IEngineClient>("VEngineClient");
   engineTrace = engineDylib->GetInterface<IEngineTrace>("EngineTraceClient");
+  gameMovement = clientDylib->GetInterface<IGameMovement>("GameMovement");
   materialSystem = materialSystemDylib->GetInterface<IMaterialSystem>("VMaterialSystem");
   modelInfo = engineDylib->GetInterface<IModelInfo>("VModelInfoClient");
   physics = physicsDylib->GetInterface<IPhysicsSurfaceProps>("VPhysicsSurfaceProps");
+  prediction = clientDylib->GetInterface<IPrediction>("VClientPrediction");
   studioRender = studioRenderDylib->GetInterface<IStudioRender>("VStudioRender");
 
   globalVars = *reinterpret_cast<CGlobalVars **>(GetGlobalVarsPtr());
