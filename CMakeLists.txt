@@ -1,10 +1,11 @@
 cmake_minimum_required(VERSION 3.9)
 project(havoc VERSION 1.0.5)
 
+set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_OSX_ARCHITECTURES "x86_64")
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -flto")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -flto -flegacy-pass-manager -Xclang -load -Xclang /Users/aesophor/Code/succubus/build/libSuccubus.dylib")
 
 find_package(SDL2 REQUIRED HINTS /usr/local)
 message(STATUS "SDL2_INCLUDE_DIRS=${SDL2_INCLUDE_DIRS}")
