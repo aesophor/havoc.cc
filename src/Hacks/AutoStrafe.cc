@@ -10,9 +10,7 @@ namespace hacks::autostrafe {
 
 namespace {
 
-void RunLegit(CUserCmd* cmd) {
-  auto localPlayer = CLocalPlayer::The();
-
+void RunLegit(CLocalPlayer *localPlayer, CUserCmd* cmd) {
   if (localPlayer->GetFlags() & CEntity::FL_ONGROUND) {
     return;
   }
@@ -46,9 +44,7 @@ void RunLegit(CUserCmd* cmd) {
   }
 }
 
-void RunRage(CUserCmd* cmd) {
-  auto localPlayer = CLocalPlayer::The();
-
+void RunRage(CLocalPlayer *localPlayer, CUserCmd* cmd) {
   static bool leftRight;
   bool inMove
     = cmd->buttons & CUserCmd::IN_FORWARD ||
@@ -103,12 +99,11 @@ bool Init() {
   return true;
 }
 
-void CreateMove(CUserCmd *cmd) {
+void CreateMove(CLocalPlayer *localPlayer, CUserCmd *cmd) {
   if (!settings::autostrafe::isEnabled) {
     return;
   }
 
-  auto localPlayer = CLocalPlayer::The();
   if (localPlayer->GetMoveType() == CEntity::MOVETYPE_LADDER ||
       localPlayer->GetMoveType() == CEntity::MOVETYPE_NOCLIP) {
     return;
@@ -119,10 +114,10 @@ void CreateMove(CUserCmd *cmd) {
     case AutoStrafeType::BACKWARDS:
     case AutoStrafeType::LEFT_SIDEWAYS:
     case AutoStrafeType::RIGHT_SIDEWAYS:
-      RunLegit(cmd);
+      RunLegit(localPlayer, cmd);
       break;
     case AutoStrafeType::RAGE:
-      RunRage(cmd);
+      RunRage(localPlayer, cmd);
       break;
   }
 }

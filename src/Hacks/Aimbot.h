@@ -2,12 +2,13 @@
 #ifndef HAVOC_AIMBOT_H_
 #define HAVOC_AIMBOT_H_
 
+#include "SDK/CEntity.h"
 #include "SDK/CUserCmd.h"
 
 namespace hacks::aimbot {
 
 bool Init();
-void CreateMove(CUserCmd *cmd);
+void CreateMove(CLocalPlayer *localPlayer, CUserCmd *cmd);
 
 }  // namespace hacks::aimbot
 

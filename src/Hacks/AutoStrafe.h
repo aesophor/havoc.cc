@@ -2,6 +2,7 @@
 #ifndef HAVOC_AUTO_STRAFE_H_
 #define HAVOC_AUTO_STRAFE_H_
 
+#include "SDK/CEntity.h"
 #include "SDK/CUserCmd.h"
 
 namespace hacks::autostrafe {
@@ -15,7 +16,7 @@ enum class AutoStrafeType : int {
 };
 
 bool Init();
-void CreateMove(CUserCmd *cmd);
+void CreateMove(CLocalPlayer *localPlayer, CUserCmd *cmd);
 
 }  // namespace hacks::autostrafe
 

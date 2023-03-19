@@ -143,12 +143,11 @@ bool Init() {
   return true;
 }
 
-void CreateMove(CUserCmd* cmd) {
+void CreateMove(CLocalPlayer *localPlayer, CUserCmd* cmd) {
   if (!settings::antiaim::isEnabled) {
     return;
   }
 
-  auto localPlayer = CLocalPlayer::The();
   CVector oldAngle = cmd->viewAngles;
   float oldForward = cmd->forwardMove;
   float oldSideMove = cmd->sideMove;

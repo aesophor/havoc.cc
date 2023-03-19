@@ -3,6 +3,7 @@
 #define HAVOC_ANTI_AIM_H_
 
 #include "SDK/CCSGOAnimState.h"
+#include "SDK/CEntity.h"
 #include "SDK/CUserCmd.h"
 
 namespace hacks::antiaim {
@@ -23,7 +24,7 @@ enum class AntiAimTypeX : int {
 };
 
 bool Init();
-void CreateMove(CUserCmd *cmd);
+void CreateMove(CLocalPlayer *localPlayer, CUserCmd *cmd);
 float GetMaxDelta(CCSGOAnimState *animState);
 
 }  // namespace hacks::antiaim

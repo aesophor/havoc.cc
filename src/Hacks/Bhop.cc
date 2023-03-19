@@ -10,12 +10,12 @@ bool Init() {
   return true;
 }
 
-void CreateMove(CUserCmd *cmd) {
+void CreateMove(CLocalPlayer *localPlayer, CUserCmd *cmd) {
   if (!settings::bhop::isEnabled) {
     return;
   }
 
-  if (!(CLocalPlayer::The()->GetFlags() & CEntity::FL_ONGROUND)) {
+  if (!(localPlayer->GetFlags() & CEntity::FL_ONGROUND)) {
     cmd->buttons &= ~CUserCmd::IN_JUMP;
   }
 }

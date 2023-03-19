@@ -35,13 +35,11 @@ CVector VelocityExtrapolate(CBasePlayer *player, const CVector &aimPos) {
 	return aimPos + player->GetVelocity().Scale(interfaces::globalVars->intervalPerTick);
 }
 
-void RunLegit(CUserCmd *cmd) {
+void RunLegit(CLocalPlayer *localPlayer, CUserCmd *cmd) {
   // Check if we are trying to shoot.
   if (!(cmd->buttons & CUserCmd::IN_ATTACK)) {
     return;
   }
-
-  auto localPlayer = CLocalPlayer::The();
 
   if (localPlayer->IsDefusing()) {
     return;
@@ -119,9 +117,7 @@ void RunLegit(CUserCmd *cmd) {
   }
 }
 
-void RunRage(CUserCmd *cmd) {
-  auto localPlayer = CLocalPlayer::The();
-
+void RunRage(CLocalPlayer *localPlayer, CUserCmd *cmd) {
   if (localPlayer->IsDefusing()) {
     return;
   }
@@ -208,15 +204,15 @@ bool Init() {
   return true;
 }
 
-void CreateMove(CUserCmd *cmd) {
+void CreateMove(CLocalPlayer *localPlayer, CUserCmd *cmd) {
   if (!settings::aimbot::isEnabled) {
     return;
   }
 
   if (settings::aimbot::shouldRage) {
-    RunRage(cmd);
+    RunRage(localPlayer, cmd);
   } else {
-    RunLegit(cmd);
+    RunLegit(localPlayer, cmd);
   }
 }
 

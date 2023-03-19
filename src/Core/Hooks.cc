@@ -17,6 +17,7 @@
 #include "Hacks/Bhop.h"
 #include "Hacks/Chams.h"
 #include "Hacks/Glow.h"
+#include "Hacks/Prediction.h"
 #include "Hacks/Skins.h"
 #include "GUI/GUI.h"
 #include "SDK/CEntity.h"
@@ -44,20 +45,25 @@ bool Hook(uintptr_t func_addr, uintptr_t user_func_addr) {
   return mprotect(page, vm_page_size, PROT_READ | PROT_EXEC) == 0;
 }
 
+// Make sure this function is being called from CInput::CreateMove(),
+// since it uses ray tracing APIs from the game, and they can only be
+// called from certain threads.
 bool CreateMove(IClientMode *thisptr, float frameTime, CUserCmd *cmd) {
-  // Make sure this function is being called from CInput::CreateMove().
   if (!cmd || !cmd->commandNumber) {
     return originalCreateMove(interfaces::clientMode, frameTime, cmd);
   }
 
   auto localPlayer = CLocalPlayer::The();
-
-  if (localPlayer && localPlayer->IsAlive()) {
-    hacks::bhop::CreateMove(cmd);
-    hacks::antiaim::CreateMove(cmd);
-    hacks::autostrafe::CreateMove(cmd);
-    hacks::aimbot::CreateMove(cmd);
+  if (!localPlayer || !localPlayer->IsAlive()) {
+    return originalCreateMove(interfaces::clientMode, frameTime, cmd);
   }
+
+  hacks::prediction::StartPrediction(localPlayer, cmd);
+  hacks::bhop::CreateMove(localPlayer, cmd);
+  hacks::antiaim::CreateMove(localPlayer, cmd);
+  hacks::autostrafe::CreateMove(localPlayer, cmd);
+  hacks::aimbot::CreateMove(localPlayer, cmd);
+  hacks::prediction::EndPrediction(localPlayer);
 
   if (createMoveShouldSendPacket) {
     createMoveLastTickViewAngles = cmd->viewAngles;
