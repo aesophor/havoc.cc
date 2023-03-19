@@ -46,7 +46,10 @@ inline IPhysicsSurfaceProps *physics = nullptr;
 inline IPrediction *prediction = nullptr;
 inline IStudioRender *studioRender = nullptr;
 
+// Global variables
 inline CGlobalVars *globalVars = nullptr;
+inline CMoveData *moveData = nullptr;
+inline int *predictionRandomSeed = nullptr;
 
 }  // namespace interfaces
 

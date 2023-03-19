@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Marco Wang <m.aesophor@gmail.com>. All rights reserved.
+// Copyright (c) 2023 Marco Wang <m.aesophor@gmail.com>. All rights reserved.
 #include "Interfaces.h"
 
 #include "Core/Hooks.h"
@@ -9,10 +9,10 @@ namespace interfaces {
 uintptr_t GetClientMode() {
   constexpr std::string_view kSig = "\x48\x8b\xb7????\x48\x8d\x3d????\x5d\xe9";
 
-  uintptr_t sigAddr = clientDylib->ScanSignature(kSig) + 0xa;
-  uint32_t fileOffset = sigAddr - clientDylib->GetBase();
-  uint32_t offset = *reinterpret_cast<uint32_t *>(sigAddr);
-  return clientDylib->GetBase() + (offset + fileOffset) + 0x4;
+  constexpr auto kSizeOfInst = 7;
+  uintptr_t sigAddr = clientDylib->ScanSignature(kSig);
+  uintptr_t offsetAddr = sigAddr + 10;
+  return sigAddr + 2 * kSizeOfInst + *reinterpret_cast<uint32_t *>(offsetAddr);
 }
 
 uintptr_t GetMoveHelperPtr() {
@@ -33,7 +33,7 @@ uintptr_t GetMoveHelperPtr() {
   // r8:  hitent.GetEntryIndex()
   // r9:  MoveHelper()->GetName(hitent)
   //
-  // __text:00000000001B5DD3 48 8D 05 7E ED E8 01     lea     rax, [rip+0x1e8ed7e] <-- MoveHelper()
+  // __text:00000000001B5DD3 48 8D 05 7E ED E8 01     lea     rax, [rip+0x1E8ED7E] <-- MoveHelper()
   // __text:00000000001B5DDA 48 8B 38                 mov     rdi, [rax]
   // __text:00000000001B5DDD 48 8B 07                 mov     rax, [rdi]
   // __text:00000000001B5DE0 48 8B 00                 mov     rax, [rax]
@@ -50,20 +50,21 @@ uintptr_t GetMoveHelperPtr() {
   // __text:00000000001B5E0D FF 95 30 FF FF FF        call    [rbp+var_D0]
   constexpr std::string_view kSig = "\x48\x8d\x05????\x48\x8b\x38\x48\x8b\x07\x48\x8b?\x89\x9d\x48\xff\xff\xff";
 
-  // rip = `sigAddr`, *offset = 0x1e8ed7e
-  uintptr_t sigAddr = clientDylib->ScanSignature(kSig) + 0x3;
-  uint32_t fileOffset = sigAddr - clientDylib->GetBase();
-  uint32_t offset = *reinterpret_cast<uint32_t *>(sigAddr);
-  return clientDylib->GetBase() + fileOffset + offset + 0x4;
+  // rip = the address of the "next" instruction to execute.
+  // rip = 0x1B5DDA, *offset = 0x1E8ED7E
+  constexpr auto kSizeOfInst = 7;
+  uintptr_t sigAddr = clientDylib->ScanSignature(kSig);
+  uintptr_t offsetAddr = sigAddr + 3;
+  return sigAddr + kSizeOfInst + *reinterpret_cast<uint32_t *>(offsetAddr);
 }
 
 uintptr_t GetGlobalVarsPtr() {
   constexpr std::string_view kSig = "\x48\x8d\x05????\x48\x8b?\xf3\x0f\x10??\xf3\x0f\x11\x83";
 
-  uintptr_t sigAddr = clientDylib->ScanSignature(kSig) + 0x3;
-  uint32_t fileOffset = sigAddr - clientDylib->GetBase();
-  uint32_t offset = *reinterpret_cast<uint32_t *>(sigAddr);
-  return clientDylib->GetBase() + (offset + fileOffset) + 0x4;
+  constexpr auto kSizeOfInst = 7;
+  uintptr_t sigAddr = clientDylib->ScanSignature(kSig);
+  uintptr_t offsetAddr = sigAddr + 3;
+  return sigAddr + kSizeOfInst + *reinterpret_cast<uint32_t *>(offsetAddr);
 }
 
 void Init() {
@@ -91,7 +92,10 @@ void Init() {
   prediction = clientDylib->GetInterface<IPrediction>("VClientPrediction");
   studioRender = studioRenderDylib->GetInterface<IStudioRender>("VStudioRender");
 
+  // Global variables
   globalVars = *reinterpret_cast<CGlobalVars **>(GetGlobalVarsPtr());
+  moveData = nullptr;
+  predictionRandomSeed = nullptr;
 }
 
 }  // namespace interfaces
