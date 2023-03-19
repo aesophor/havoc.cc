@@ -37,15 +37,10 @@ bool Hook(uintptr_t func_addr, uintptr_t user_func_addr) {
   *((int *) &opcodes[2]) = 0;
   *((uintptr_t *) &opcodes[6]) = user_func_addr;
 
-  // Enable write permission on the __TEXT segment.
   if (mprotect(page, vm_page_size, PROT_READ | PROT_WRITE | PROT_EXEC)) {
     return false;
   }
-
-  // Rewrite the first instruction to `jmp user_func_addr`.
   memcpy(func, opcodes, kSizeOfJmp);
-
-  // Unset write permission.
   return mprotect(page, vm_page_size, PROT_READ | PROT_EXEC) == 0;
 }
 
