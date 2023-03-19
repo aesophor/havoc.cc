@@ -41,6 +41,7 @@ inline IEngineTrace *engineTrace = nullptr;
 inline IGameMovement *gameMovement = nullptr;
 inline IMaterialSystem *materialSystem = nullptr;
 inline IModelInfo *modelInfo = nullptr;
+inline IMoveHelper *moveHelper = nullptr;
 inline IPhysicsSurfaceProps *physics = nullptr;
 inline IPrediction *prediction = nullptr;
 inline IStudioRender *studioRender = nullptr;
