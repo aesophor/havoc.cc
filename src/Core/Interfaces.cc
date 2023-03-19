@@ -10,8 +10,8 @@ uintptr_t GetClientMode() {
   constexpr std::string_view kSig = "\x48\x8b\xb7????\x48\x8d\x3d????\x5d\xe9";
 
   uintptr_t sigAddr = clientDylib->ScanSignature(kSig) + 0xa;
-  uintptr_t fileOffset = sigAddr - clientDylib->GetBase();
-  uintptr_t offset = *reinterpret_cast<uint32_t *>(sigAddr);
+  uint32_t fileOffset = sigAddr - clientDylib->GetBase();
+  uint32_t offset = *reinterpret_cast<uint32_t *>(sigAddr);
   return clientDylib->GetBase() + (offset + fileOffset) + 0x4;
 }
 
@@ -61,8 +61,8 @@ uintptr_t GetGlobalVarsPtr() {
   constexpr std::string_view kSig = "\x48\x8d\x05????\x48\x8b?\xf3\x0f\x10??\xf3\x0f\x11\x83";
 
   uintptr_t sigAddr = clientDylib->ScanSignature(kSig) + 0x3;
-  uintptr_t fileOffset = sigAddr - clientDylib->GetBase();
-  uintptr_t offset = *reinterpret_cast<uint32_t *>(sigAddr);
+  uint32_t fileOffset = sigAddr - clientDylib->GetBase();
+  uint32_t offset = *reinterpret_cast<uint32_t *>(sigAddr);
   return clientDylib->GetBase() + (offset + fileOffset) + 0x4;
 }
 
