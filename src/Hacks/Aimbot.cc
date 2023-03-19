@@ -31,6 +31,10 @@ void GetBestBone(CBasePlayer *player, float &bestDamage, Bone &bestBone) {
   }
 }
 
+CVector VelocityExtrapolate(CBasePlayer *player, const CVector &aimPos) {
+	return aimPos + player->GetVelocity().Scale(interfaces::globalVars->intervalPerTick);
+}
+
 void RunLegit(CUserCmd *cmd) {
   // Check if we are trying to shoot.
   if (!(cmd->buttons & CUserCmd::IN_ATTACK)) {
@@ -163,26 +167,31 @@ void RunRage(CUserCmd *cmd) {
     }
   }
 
+  if (!target) {
+    return;
+  }
+
   if (settings::aimbot::shouldAutoScope &&
-      target &&
       activeWeapon->CanScope() &&
       !localPlayer->IsScoped()) {
     cmd->buttons |= CUserCmd::IN_SECOND_ATTACK;
-  } else if (settings::aimbot::shouldAutoFire && target) {
+  } else if (settings::aimbot::shouldAutoFire) {
     uint64_t timestamp = GetCurrentTimestampMs();
-
     if (timestamp - lastFiredTimestamp >= settings::aimbot::nextFireDelayMs) {
       CVector localEyePosition = localPlayer->GetEyePosition();
-      CVector enemyHeadPosition = target->GetBonePosition(bestBone);
-      CVector aimPunch = localPlayer->GetAimPunchAngle();
-      CVector enemyAngle
-        = (enemyHeadPosition - localEyePosition).ToAngle() - (cmd->viewAngles + aimPunch);
+      CVector targetPosition = target->GetBonePosition(bestBone);
 
-      cmd->viewAngles += enemyAngle;
+      localEyePosition = VelocityExtrapolate(localPlayer, localEyePosition);
+      targetPosition = VelocityExtrapolate(target, targetPosition);
+
+      CVector aimPunch = localPlayer->GetAimPunchAngle();
+      CVector enemyAngle = (targetPosition - localEyePosition).ToAngle() - aimPunch.Scale(2);
+
+      cmd->viewAngles = enemyAngle;
       cmd->buttons |= CUserCmd::IN_ATTACK;
 
       lastFiredTimestamp = timestamp;
-      settings::aimbot::nextFireDelayMs = settings::aimbot::fireDelayMs + RandomInt(-25, 25);
+      settings::aimbot::nextFireDelayMs = settings::aimbot::fireDelayMs;
     }
   }
 }
