@@ -5,6 +5,7 @@
 #include <memory>
 
 #include "Core/Dylib.h"
+#include "SDK/CGlobalVars.h"
 #include "SDK/IBaseClientDLL.h"
 #include "SDK/IClientEntityList.h"
 #include "SDK/IClientMode.h"
@@ -39,6 +40,8 @@ inline IMaterialSystem *materialSystem = nullptr;
 inline IModelInfo *modelInfo = nullptr;
 inline IPhysicsSurfaceProps *physics = nullptr;
 inline IStudioRender *studioRender = nullptr;
+
+inline CGlobalVars *globalVars = nullptr;
 
 }  // namespace interfaces
 
